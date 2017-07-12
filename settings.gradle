@@ -1,0 +1,1 @@
+include ':jspoon', ':retrofit-converter-jspoon',':advanced-example', ':android-example'
