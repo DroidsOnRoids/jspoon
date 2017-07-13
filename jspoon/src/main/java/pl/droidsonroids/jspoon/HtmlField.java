@@ -13,28 +13,49 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import pl.droidsonroids.jspoon.annotation.Selector;
 import pl.droidsonroids.jspoon.exception.DateParseException;
+import pl.droidsonroids.jspoon.exception.DoubleParseException;
 import pl.droidsonroids.jspoon.exception.FieldSetException;
 import pl.droidsonroids.jspoon.exception.FloatParseException;
 
 abstract class HtmlField<T> {
     Field field;
-    Selector selector;
+    private String cssQuery;
+    private String attribute;
+    private String format;
+    private Locale locale;
+    private String defValue;
+    private int index;
 
     HtmlField(Field field, Selector selector) {
         this.field = field;
-        this.selector = selector;
+        cssQuery = selector.value();
+        attribute = selector.attr();
+        format = selector.format();
+        setLocaleFromTag(selector.locale());
+        defValue = selector.defValue();
+        index = selector.index();
+    }
+
+    private void setLocaleFromTag(String localeTag) {
+        if (localeTag.equals(Selector.NO_VALUE)) {
+            locale = Locale.getDefault();
+        } else {
+            locale = Locale.forLanguageTag(localeTag);
+        }
     }
 
     public abstract void setValue(Jspoon jspoon, Element node, T newInstance);
 
-    Element getSelectedNode(Element node) {
-        String cssQuery = selector.value();
-        int index = selector.index();
-        return getAtIndexOrNull(node, cssQuery, index);
+    Element selectChild(Element parent) {
+        return getElementAtIndexOrNull(parent);
     }
 
-    private static Element getAtIndexOrNull(Element node, String cssQuery, int index) {
-        Elements elements = node.select(cssQuery);
+    Elements selectChildren(Element node) {
+        return node.select(cssQuery);
+    }
+
+    private Element getElementAtIndexOrNull(Element parent) {
+        Elements elements = selectChildren(parent);
         int size = elements.size();
         if (size == 0 || size <= index) {
             return null;
@@ -53,34 +74,29 @@ abstract class HtmlField<T> {
 
     @SuppressWarnings("unchecked")
     <U> U instanceForNode(Element node, Class<U> clazz) {
-        String attribute = selector.attr();
-        String format = selector.format();
-        String locale = selector.locale();
-        String defValue = selector.defValue();
-
         if (clazz.equals(Element.class)) {
             return (U) node;
         }
-        String value = getValue(node, clazz, attribute, format, defValue);
+        String value = getValue(node, clazz);
 
         if (clazz.equals(String.class)) {
             return (U) value;
         }
 
-        if (clazz.equals(Integer.class) || clazz.getSimpleName().equals("int")) {
+        if (clazz.equals(Integer.class) || clazz.equals(int.class)) {
             return (U) Integer.valueOf(value);
         }
 
-        if (clazz.equals(Boolean.class) || clazz.getSimpleName().equals("boolean")) {
+        if (clazz.equals(Long.class) || clazz.equals(long.class)) {
+            return (U) Long.valueOf(value);
+        }
+
+        if (clazz.equals(Boolean.class) || clazz.equals(boolean.class)) {
             return (U) Boolean.valueOf(value);
         }
 
         if (clazz.equals(Date.class)) {
-            Locale loc = Locale.getDefault();
-            if (!locale.equals(Selector.NO_VALUE)) {
-                loc = Locale.forLanguageTag(locale);
-            }
-            DateFormat dateFormat = new SimpleDateFormat(format, loc);
+            DateFormat dateFormat = getDateFormat();
             try {
                 return (U) dateFormat.parse(value);
             } catch (ParseException e) {
@@ -88,26 +104,36 @@ abstract class HtmlField<T> {
             }
         }
 
-        if (clazz.equals(Float.class) || clazz.getSimpleName().equals("float")) {
+        if (clazz.equals(Float.class) || clazz.equals(float.class)) {
             if (!locale.equals(Selector.NO_VALUE)) {
-                Locale loc = Locale.forLanguageTag(locale);
-                NumberFormat numberFormat = NumberFormat.getInstance(loc);
-                Number number;
                 try {
-                    number = numberFormat.parse(value);
+                    Number number = getNumberFromString(value);
+                    return (U) Float.valueOf(number.floatValue());
                 } catch (ParseException e) {
                     throw new FloatParseException(value, locale);
                 }
-                return (U) Float.valueOf(number.floatValue());
             } else {
                 return (U) Float.valueOf(value);
+            }
+        }
+
+        if (clazz.equals(Double.class) || clazz.equals(double.class)) {
+            if (!locale.equals(Selector.NO_VALUE)) {
+                try {
+                    Number number = getNumberFromString(value);
+                    return (U) Double.valueOf(number.floatValue());
+                } catch (ParseException e) {
+                    throw new DoubleParseException(value, locale);
+                }
+            } else {
+                return (U) Double.valueOf(value);
             }
         }
 
         return (U) value;
     }
 
-    private <U> String getValue(Element node, Class<U> clazz, String attribute, String format, String defValue) {
+    private <U> String getValue(Element node, Class<U> clazz) {
         String value;
         switch (attribute) {
             case "":
@@ -138,5 +164,14 @@ abstract class HtmlField<T> {
             }
         }
         return value;
+    }
+
+    private DateFormat getDateFormat() {
+        return new SimpleDateFormat(format, locale);
+    }
+
+    private Number getNumberFromString(String value) throws ParseException {
+        NumberFormat numberFormat = NumberFormat.getInstance(locale);
+        return numberFormat.parse(value);
     }
 }

@@ -16,8 +16,7 @@ class HtmlListField<T> extends HtmlField<T> {
 
     @Override
     public void setValue(Jspoon jspoon, Element node, T newInstance) {
-        String cssQuery = selector.value();
-        Elements nodes = node.select(cssQuery);
+        Elements nodes = selectChildren(node);
 
         Type genericType = field.getGenericType();
         Type type = ((ParameterizedType) genericType).getActualTypeArguments()[0];

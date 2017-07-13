@@ -18,6 +18,7 @@ import pl.droidsonroids.jspoon.HtmlAdapter;
  * String
  * Float
  * Integer
+ * Long
  * Boolean
  * Date
  * {@link Element}
