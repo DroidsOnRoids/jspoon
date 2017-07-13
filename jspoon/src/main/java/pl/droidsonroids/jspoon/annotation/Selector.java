@@ -17,6 +17,7 @@ import pl.droidsonroids.jspoon.HtmlAdapter;
  * the following types (or its primitive):
  * String
  * Float
+ * Double
  * Integer
  * Long
  * Boolean
