@@ -5,8 +5,10 @@ import java.util.Date;
 import java.util.Locale;
 import org.jsoup.nodes.Element;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import pl.droidsonroids.jspoon.annotation.Selector;
+import pl.droidsonroids.jspoon.rule.DefaultLocaleRule;
 
 import static org.junit.Assert.assertEquals;
 
@@ -30,6 +32,9 @@ public class SimpleTypes {
             + "<div id='element-test' data-test='test'/>"
             + "</div>";
     private Jspoon jspoon;
+
+    @ClassRule
+    public static DefaultLocaleRule defaultLocale = new DefaultLocaleRule(Locale.US);
 
     @Before
     public void setUp() {
