@@ -8,7 +8,7 @@ import pl.droidsonroids.jspoon.annotation.Selector;
 
 import static org.junit.Assert.assertEquals;
 
-public class SimpleTypesList {
+public class SimpleTypesListTest {
     private final static String HTML_CONTENT = "<div>"
             + "<span class='string'>Test1</span>"
             + "<span class='int'>-200</span>"
@@ -40,22 +40,24 @@ public class SimpleTypesList {
 
     @Test
     public void booleanList() {
-        HtmlAdapter<BooleanModel> htmlAdapter = jspoon.adapter(BooleanModel.class);
-        BooleanModel booleanModel = htmlAdapter.fromHtml(HTML_CONTENT);
+        BooleanModel booleanModel = createObjectFromHtml(BooleanModel.class);
         assertEquals(booleanModel.booleanList, Arrays.asList(true, false, false));
     }
 
     @Test
     public void integerList() {
-        HtmlAdapter<IntModel> htmlAdapter = jspoon.adapter(IntModel.class);
-        IntModel intModel = htmlAdapter.fromHtml(HTML_CONTENT);
+        IntModel intModel = createObjectFromHtml(IntModel.class);
         assertEquals(intModel.integerList, Arrays.asList(-200, 4, 32000));
     }
 
     @Test
     public void stringList() {
-        HtmlAdapter<StringModel> htmlAdapter = jspoon.adapter(StringModel.class);
-        StringModel stringModel = htmlAdapter.fromHtml(HTML_CONTENT);
+        StringModel stringModel = createObjectFromHtml(StringModel.class);
         assertEquals(stringModel.stringList, Arrays.asList("Test1", "", "Test2 ".trim()));
+    }
+
+    private <T> T createObjectFromHtml(Class<T> className) {
+        HtmlAdapter<T> htmlAdapter = jspoon.adapter(className);
+        return htmlAdapter.fromHtml(HTML_CONTENT);
     }
 }

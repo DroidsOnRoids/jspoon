@@ -98,7 +98,6 @@ abstract class HtmlField<T> {
         if (clazz.equals(Date.class)) {
             DateFormat dateFormat = getDateFormat();
             try {
-                dateFormat.format(new Date());
                 return (U) dateFormat.parse(value);
             } catch (ParseException e) {
                 throw new DateParseException(value, format, locale);

@@ -1,6 +1,6 @@
 package pl.droidsonroids.jspoon;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 import org.jsoup.nodes.Element;
@@ -12,7 +12,7 @@ import pl.droidsonroids.jspoon.rule.CustomLocaleRule;
 
 import static org.junit.Assert.assertEquals;
 
-public class SimpleTypes {
+public class SimpleTypesTest {
     private final static String HTML_CONTENT = "<div>"
             + "<span id='string1'>Test1</span>"
             + "<span id='int1'>-200</span>"
@@ -31,10 +31,11 @@ public class SimpleTypes {
             + "<p id='date3'>Jul 30, 1444</p>"
             + "<div id='element-test' data-test='test'/>"
             + "</div>";
+    private final static Locale CUSTOM_DEFAULT_LOCALE = Locale.US;
     private Jspoon jspoon;
 
     @ClassRule
-    public static CustomLocaleRule defaultLocale = new CustomLocaleRule(Locale.US);
+    public static CustomLocaleRule customLocaleRule = new CustomLocaleRule(CUSTOM_DEFAULT_LOCALE);
 
     @Before
     public void setUp() {
@@ -89,8 +90,7 @@ public class SimpleTypes {
 
     @Test
     public void booleanTest() {
-        HtmlAdapter<BooleanModel> htmlAdapter = jspoon.adapter(BooleanModel.class);
-        BooleanModel booleanModel = htmlAdapter.fromHtml(HTML_CONTENT);
+        BooleanModel booleanModel = createObjectFromHtml(BooleanModel.class);
         assertEquals(booleanModel.testBoolean1, true);
         assertEquals(booleanModel.testBoolean2, false);
         assertEquals(booleanModel.testBoolean3, false);
@@ -98,8 +98,7 @@ public class SimpleTypes {
 
     @Test
     public void integerTest() {
-        HtmlAdapter<IntModel> htmlAdapter = jspoon.adapter(IntModel.class);
-        IntModel intModel = htmlAdapter.fromHtml(HTML_CONTENT);
+        IntModel intModel = createObjectFromHtml(IntModel.class);
         assertEquals(intModel.testInt1, -200);
         assertEquals(intModel.testInt2, 4);
         assertEquals(intModel.testInteger3, Integer.valueOf(32000));
@@ -107,8 +106,7 @@ public class SimpleTypes {
 
     @Test
     public void longTest() {
-        HtmlAdapter<LongModel> htmlAdapter = jspoon.adapter(LongModel.class);
-        LongModel longModel = htmlAdapter.fromHtml(HTML_CONTENT);
+        LongModel longModel = createObjectFromHtml(LongModel.class);
         assertEquals(longModel.testLong1, -200);
         assertEquals(longModel.testLong2, 4);
         assertEquals(longModel.testLong3, Long.valueOf(32000));
@@ -116,8 +114,7 @@ public class SimpleTypes {
 
     @Test
     public void floatTest() {
-        HtmlAdapter<FloatModel> htmlAdapter = jspoon.adapter(FloatModel.class);
-        FloatModel floatModel = htmlAdapter.fromHtml(HTML_CONTENT);
+        FloatModel floatModel = createObjectFromHtml(FloatModel.class);
         assertEquals(floatModel.testFloat1, 4.1, 0.01);
         assertEquals(floatModel.testFloat2, -10.00001, 0.01);
         assertEquals(floatModel.testFloat3, -32.123456, 0.01);
@@ -125,8 +122,7 @@ public class SimpleTypes {
 
     @Test
     public void doubleTest() {
-        HtmlAdapter<DoubleModel> htmlAdapter = jspoon.adapter(DoubleModel.class);
-        DoubleModel doubleModel = htmlAdapter.fromHtml(HTML_CONTENT);
+        DoubleModel doubleModel = createObjectFromHtml(DoubleModel.class);
         assertEquals(doubleModel.testDouble1, 4.1, 0.000001);
         assertEquals(doubleModel.testDouble2, -10.00001, 0.000001);
         assertEquals(doubleModel.testDouble3, -32.123456, 0.000001);
@@ -134,8 +130,7 @@ public class SimpleTypes {
 
     @Test
     public void stringTest() {
-        HtmlAdapter<StringModel> htmlAdapter = jspoon.adapter(StringModel.class);
-        StringModel stringModel = htmlAdapter.fromHtml(HTML_CONTENT);
+        StringModel stringModel = createObjectFromHtml(StringModel.class);
         assertEquals(stringModel.testString1, "Test1");
         assertEquals(stringModel.testString2, "");
         assertEquals(stringModel.testString3, "Test2 ".trim());
@@ -143,8 +138,7 @@ public class SimpleTypes {
 
     @Test
     public void elementTest() {
-        HtmlAdapter<ElementModel> htmlAdapter = jspoon.adapter(ElementModel.class);
-        ElementModel elementModel = htmlAdapter.fromHtml(HTML_CONTENT);
+        ElementModel elementModel = createObjectFromHtml(ElementModel.class);
         Element testElement = elementModel.testElement;
         assertEquals(testElement.id(), "element-test");
         assertEquals(testElement.attr("data-test"), "test");
@@ -152,11 +146,15 @@ public class SimpleTypes {
 
     @Test
     public void dateTest() throws Exception {
-        HtmlAdapter<DateModel> htmlAdapter = jspoon.adapter(DateModel.class);
-        DateModel dateModel = htmlAdapter.fromHtml(HTML_CONTENT);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.ROOT);
-        assertEquals(dateModel.testDate1, simpleDateFormat.parse("14.07.2017"));
-        assertEquals(dateModel.testDate2, simpleDateFormat.parse("01.04.2137"));
-        assertEquals(dateModel.testDate3, simpleDateFormat.parse("30.07.1444"));
+        DateModel dateModel = createObjectFromHtml(DateModel.class);
+        DateFormat defaultDateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, CUSTOM_DEFAULT_LOCALE);
+        assertEquals(dateModel.testDate1, defaultDateFormat.parse("Jul 14, 2017"));
+        assertEquals(dateModel.testDate2, defaultDateFormat.parse("Apr 1, 2137"));
+        assertEquals(dateModel.testDate3, defaultDateFormat.parse("Jul 30, 1444"));
     }
+
+    private <T> T createObjectFromHtml(Class<T> className) {
+        HtmlAdapter<T> htmlAdapter = jspoon.adapter(className);
+        return htmlAdapter.fromHtml(HTML_CONTENT);
+    } 
 }

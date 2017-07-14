@@ -5,8 +5,8 @@ import org.junit.rules.ExternalResource;
 
 public class CustomLocaleRule extends ExternalResource{
     private Locale customLocale;
-
     private Locale defaultLocale;
+
     public CustomLocaleRule(Locale customLocale) {
         this.customLocale = customLocale;
         defaultLocale = Locale.getDefault();
