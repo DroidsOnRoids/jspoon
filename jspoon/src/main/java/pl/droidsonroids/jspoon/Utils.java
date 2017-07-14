@@ -1,6 +1,5 @@
 package pl.droidsonroids.jspoon;
 
-import java.text.DecimalFormatSymbols;
 import java.util.Date;
 import java.util.List;
 import org.jsoup.nodes.Element;
@@ -15,6 +14,7 @@ class Utils {
                 clazz.equals(Boolean.class) || clazz.equals(boolean.class) ||
                 clazz.equals(Element.class) ||
                 clazz.equals(List.class) ||
-                clazz.equals(Date.class);
+                clazz.equals(Date.class) ||
+                clazz.equals(Element.class);
     }
 }

@@ -38,7 +38,7 @@ abstract class HtmlField<T> {
 
     private void setLocaleFromTag(String localeTag) {
         if (localeTag.equals(Selector.NO_VALUE)) {
-            locale = Locale.getDefault();
+            locale = Locale.ROOT;
         } else {
             locale = Locale.forLanguageTag(localeTag);
         }
@@ -98,6 +98,7 @@ abstract class HtmlField<T> {
         if (clazz.equals(Date.class)) {
             DateFormat dateFormat = getDateFormat();
             try {
+                dateFormat.format(new Date());
                 return (U) dateFormat.parse(value);
             } catch (ParseException e) {
                 throw new DateParseException(value, format, locale);
@@ -105,28 +106,20 @@ abstract class HtmlField<T> {
         }
 
         if (clazz.equals(Float.class) || clazz.equals(float.class)) {
-            if (!locale.equals(Selector.NO_VALUE)) {
-                try {
-                    Number number = getNumberFromString(value);
-                    return (U) Float.valueOf(number.floatValue());
-                } catch (ParseException e) {
-                    throw new FloatParseException(value, locale);
-                }
-            } else {
-                return (U) Float.valueOf(value);
+            try {
+                Number number = getNumberFromString(value);
+                return (U) Float.valueOf(number.floatValue());
+            } catch (ParseException e) {
+                throw new FloatParseException(value, locale);
             }
         }
 
         if (clazz.equals(Double.class) || clazz.equals(double.class)) {
-            if (!locale.equals(Selector.NO_VALUE)) {
-                try {
-                    Number number = getNumberFromString(value);
-                    return (U) Double.valueOf(number.floatValue());
-                } catch (ParseException e) {
-                    throw new DoubleParseException(value, locale);
-                }
-            } else {
-                return (U) Double.valueOf(value);
+            try {
+                Number number = getNumberFromString(value);
+                return (U) Double.valueOf(number.floatValue());
+            } catch (ParseException e) {
+                throw new DoubleParseException(value, locale);
             }
         }
 
@@ -167,7 +160,11 @@ abstract class HtmlField<T> {
     }
 
     private DateFormat getDateFormat() {
-        return new SimpleDateFormat(format, locale);
+        if (Selector.NO_VALUE.equals(format)) {
+            return DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
+        } else {
+            return new SimpleDateFormat(format, locale);
+        }
     }
 
     private Number getNumberFromString(String value) throws ParseException {
