@@ -3,11 +3,11 @@ package pl.droidsonroids.jspoon.rule;
 import java.util.Locale;
 import org.junit.rules.ExternalResource;
 
-public class DefaultLocaleRule extends ExternalResource{
+public class CustomLocaleRule extends ExternalResource{
     private Locale customLocale;
 
     private Locale defaultLocale;
-    public DefaultLocaleRule(Locale customLocale) {
+    public CustomLocaleRule(Locale customLocale) {
         this.customLocale = customLocale;
         defaultLocale = Locale.getDefault();
     }

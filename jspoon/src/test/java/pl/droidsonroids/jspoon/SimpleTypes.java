@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 import pl.droidsonroids.jspoon.annotation.Selector;
-import pl.droidsonroids.jspoon.rule.DefaultLocaleRule;
+import pl.droidsonroids.jspoon.rule.CustomLocaleRule;
 
 import static org.junit.Assert.assertEquals;
 
@@ -34,7 +34,7 @@ public class SimpleTypes {
     private Jspoon jspoon;
 
     @ClassRule
-    public static DefaultLocaleRule defaultLocale = new DefaultLocaleRule(Locale.US);
+    public static CustomLocaleRule defaultLocale = new CustomLocaleRule(Locale.US);
 
     @Before
     public void setUp() {
