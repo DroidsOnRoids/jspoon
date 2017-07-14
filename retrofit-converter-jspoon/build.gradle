@@ -1,0 +1,11 @@
+plugins {
+    id 'java'
+}
+
+dependencies {
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile project(':jspoon')
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"

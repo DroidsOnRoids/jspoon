@@ -1,0 +1,10 @@
+plugins {
+    id 'java'
+}
+
+dependencies {
+    compile 'org.jsoup:jsoup:1.10.3'
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
