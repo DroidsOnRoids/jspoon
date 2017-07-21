@@ -12,8 +12,6 @@ class HtmlSimpleField<T> extends HtmlField<T> {
     @Override
     public void setValue(Jspoon jspoon, Element node, T newInstance) {
         Element selectedNode = selectChild(node);
-        if (selectedNode != null) {
-            setFieldOrThrow(field, newInstance, instanceForNode(selectedNode, field.getType()));
-        }
+        setFieldOrThrow(field, newInstance, instanceForNode(selectedNode, field.getType()));
     }
 }

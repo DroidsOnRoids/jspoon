@@ -153,7 +153,11 @@ public class AdvancedTest {
 
         @Override
         public int hashCode() {
-            return 0;
+            int result = created != null ? created.hashCode() : 0;
+            result = 31 * result + (header != null ? header.hashCode() : 0);
+            result = 31 * result + (content != null ? content.hashCode() : 0);
+            result = 31 * result + (tags != null ? tags.hashCode() : 0);
+            return result;
         }
     }
 
@@ -192,7 +196,11 @@ public class AdvancedTest {
 
         @Override
         public int hashCode() {
-            return 0;
+            int result = created != null ? created.hashCode() : 0;
+            result = 31 * result + (header != null ? header.hashCode() : 0);
+            result = 31 * result + (content != null ? content.hashCode() : 0);
+            result = 31 * result + (tags != null ? tags.hashCode() : 0);
+            return result;
         }
     }
 }
