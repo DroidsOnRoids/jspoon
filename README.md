@@ -1,2 +1,100 @@
 # Jspoon
-Annotation based HTML to Java parser
+Jspoon is a Java library that provides parsing HTML into Java objects basing on CSS selectors. It uses [Jsoup][Jsoup] underneath as a HTML parser.
+
+## Installation
+Insert the following dependency to `build.gradle` file of your project:
+```gradle
+dependencies {
+    compile 'pl.droidsonroids:jspoon:1.0.0' //not working yet TODO
+}
+```
+## Usage
+Jspoon can work on any class with a default constructor. To make it works you need to annotate fields with `@Selector` annotation and set its value to CSS selector:
+```java
+class Page {
+    @Selector("#title") String title;
+    @Selector("li.a") List<Integer> intList;
+    @Selector(value = "#image1", attr = "src") String imageSource;
+}
+```
+Then you can create `HtmlAdapter` and use it to build objects:
+```java
+String htmlContent = "<div>" 
+    + "<p id='title'>Title</p>" 
+    + "<ul>"
+    + "<li class='a'>1</li>"
+    + "<li>2</li>"
+    + "<li class='a'>3</li>"
+    + "</ul>"
+    + "<img id='image1' src='image.bmp' />"
+    + "</div>";
+
+Jspoon jspoon = Jspoon.create();
+HtmlAdapter<Page> htmlAdapter = jspoon.adapter(Page.class);
+
+Page page = htmlAdapter.fromHtml(htmlContent);
+//title = "Title"; intList = [1, 3]; imageSource = "image.bmp"
+```
+It looks for the first occurrence in HTML and sets its value to a field.
+
+### Supported types
+`@Selector` can be applied to any field of the following types (or its primitive):
+* `String`
+* `Boolean`
+* `Integer`
+* `Long`
+* `Float`
+* `Double`
+* `Date`
+* Jsoup's `Element`
+* Any class with  default contructor
+* `List` of supported type
+
+It can be also used with a class. Then you don't need to annotate every field of its type.
+
+### Attributes
+By default, the HTML's `textContent` value is used on Strings, Dates and numbers. It is possible to use an attribute by setting an `attr` parameter in the `@Selector` annotation. You can also use `html` (or `innerHtml`) and `outerHtml`.
+
+### Formatting and regex
+Date format or regex can be set up by passing `format` parameter to `@Selector` annotation. Example:
+```java
+class Page {
+    @Selector(value = "#date", format = "HH:mm:ss dd.MM.yyyy") Date date;
+    @Selector(value = "#numbers", format = "([a-z]+),") String matchedNumber;
+}
+```
+```java
+String htmlContent = "<span id='date'>13:30:12 14.07.2017</span>"
+    + "<span id='numbers'>ONE, TwO, three,</span>";
+Jspoon jspoon = Jspoon.create();
+HtmlAdapter<Page> htmlAdapter = jspoon.adapter(Page.class);
+Page page = htmlAdapter.fromHtml(htmlContent);//date = Jul 14, 2017 13:30:12; lowerCase = "three";
+```
+
+### Other parameters
+JVM's `Locale` is used for parsing Floats, Doubles and Dates. You can override it by setting `locale` parameter:
+```java
+@Selector(value = "div > p > span", locale = "pl") Double pi; //3,14 will be parsed 
+```
+If Jspoon doesn't find a HTML element it wont't set field's value unless you set the `defValue` parameter:
+```java
+@Selector(value = "div > p > span", defValue="NO_TEXT") String text;
+```
+
+### Retrofit
+Retrofit adapter is available [here][retrofit-converter].
+
+### Other libraries/inspirations
+* [Jsoup][Jsoup] - whole HTML parsing in Jspoon is made by this library
+* [webGrude][webGrude] - when I had an idea I found this library. It was the biggest inspiration and I used some code from it
+* [Moshi][Moshi] - I wanted to make Jspoon works with HTML the same way as Moshi works with JSON. I adapted caching mechanism (fields and adapters) from it.
+* [jsoup-annotations][jsoup-annotations] - similar to Jspoon
+
+[//]: #
+   [Jsoup]: <https://jsoup.org/>
+   [webGrude]: <https://github.com/beothorn/webGrude>
+   [Moshi]: <https://github.com/square/moshi>
+   [jsoup-annotations]: <https://github.com/fcannizzaro/jsoup-annotations>
+   [retrofit-converter]: <https://github.com/DroidsOnRoids/Jspoon/tree/master/retrofit-converter-jspoon>
+   
+   
