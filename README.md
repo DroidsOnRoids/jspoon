@@ -60,7 +60,7 @@ Date format or regex can be set up by passing `format` parameter to `@Selector` 
 ```java
 class Page {
     @Selector(value = "#date", format = "HH:mm:ss dd.MM.yyyy") Date date;
-    @Selector(value = "#numbers", format = "([a-z]+),") String lowerCase;
+    @Selector(value = "#numbers", format = "([a-z]+),") String matchedNumber;
 }
 ```
 ```java
