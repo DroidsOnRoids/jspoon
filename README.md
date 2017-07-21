@@ -82,7 +82,7 @@ If Jspoon doesn't find a HTML element it wont't set field's value unless you set
 ```
 
 ### Retrofit
-Retrofit adapter is available [here][retrofit-converter].
+Retrofit converter is available [here][retrofit-converter].
 
 ### Other libraries/inspirations
 * [Jsoup][Jsoup] - whole HTML parsing in Jspoon is made by this library
