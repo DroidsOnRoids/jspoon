@@ -126,6 +126,9 @@ abstract class HtmlField<T> {
     }
 
     private <U> String getValue(Element node, Class<U> clazz) {
+        if (node == null) {
+            return defValue;
+        }
         String value;
         switch (attribute) {
             case "":
@@ -151,8 +154,6 @@ abstract class HtmlField<T> {
                 if (value.isEmpty()) {
                     value = defValue;
                 }
-            } else {
-                value = defValue;
             }
         }
         return value;
