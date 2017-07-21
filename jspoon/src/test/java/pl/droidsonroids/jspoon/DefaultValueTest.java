@@ -17,7 +17,6 @@ public class DefaultValueTest {
     private static class Model {
         @Selector(value = "span", defValue = "NO_VALUE") String text;
         @Selector(value = "p", defValue = "-100") int number;
-
     }
 
     @Test
