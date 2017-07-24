@@ -1,5 +1,5 @@
-# Jspoon
-Jspoon is a Java library that provides parsing HTML into Java objects basing on CSS selectors. It uses [Jsoup][Jsoup] underneath as a HTML parser.
+# jspoon
+Jspoon is a Java library that provides parsing HTML into Java objects basing on CSS selectors. It uses [jsoup][jsoup] underneath as a HTML parser.
 
 ## Installation
 Insert the following dependency to `build.gradle` file of your project:
@@ -68,7 +68,7 @@ String htmlContent = "<span id='date'>13:30:12 14.07.2017</span>"
     + "<span id='numbers'>ONE, TwO, three,</span>";
 Jspoon jspoon = Jspoon.create();
 HtmlAdapter<Page> htmlAdapter = jspoon.adapter(Page.class);
-Page page = htmlAdapter.fromHtml(htmlContent);//date = Jul 14, 2017 13:30:12; lowerCase = "three";
+Page page = htmlAdapter.fromHtml(htmlContent);//date = Jul 14, 2017 13:30:12; matchedNumber = "three";
 ```
 
 ### Other parameters
@@ -85,13 +85,13 @@ If Jspoon doesn't find a HTML element it wont't set field's value unless you set
 Retrofit converter is available [here][retrofit-converter].
 
 ### Other libraries/inspirations
-* [Jsoup][Jsoup] - whole HTML parsing in Jspoon is made by this library
+* [jsoup][jsoup] - whole HTML parsing in Jspoon is made by this library
 * [webGrude][webGrude] - when I had an idea I found this library. It was the biggest inspiration and I used some code from it
 * [Moshi][Moshi] - I wanted to make Jspoon works with HTML the same way as Moshi works with JSON. I adapted caching mechanism (fields and adapters) from it.
 * [jsoup-annotations][jsoup-annotations] - similar to Jspoon
 
 [//]: #
-   [Jsoup]: <https://jsoup.org/>
+   [jsoup]: <https://jsoup.org/>
    [webGrude]: <https://github.com/beothorn/webGrude>
    [Moshi]: <https://github.com/square/moshi>
    [jsoup-annotations]: <https://github.com/fcannizzaro/jsoup-annotations>
