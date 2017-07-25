@@ -98,4 +98,4 @@ Retrofit converter is available [here][retrofit-converter].
    [webGrude]: <https://github.com/beothorn/webGrude>
    [Moshi]: <https://github.com/square/moshi>
    [jsoup-annotations]: <https://github.com/fcannizzaro/jsoup-annotations>
-   [retrofit-converter]: <https://github.com/DroidsOnRoids/Jspoon/tree/master/retrofit-converter-jspoon>
+   [retrofit-converter]: <https://github.com/DroidsOnRoids/jspoon/tree/master/retrofit-converter-jspoon>
