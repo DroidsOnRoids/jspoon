@@ -1,10 +1,58 @@
 plugins {
     id 'java'
+    id 'maven-publish'
+    id 'signing'
+    id 'com.bmuschko.nexus' version '2.3.1'
 }
 
 dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile project(':jspoon')
+}
+
+group = POM_RETROFIT_GROUP
+version = POM_RETROFIT_VERSION
+
+modifyPom {
+    project {
+        artifactId POM_RETROFIT_ARTIFACT_ID
+        name POM_RETROFIT_NAME
+        description POM_RETROFIT_DESCRIPTION
+        url POM_RETROFIT_URL
+
+        scm {
+            connection POM_RETROFIT_SCM_CONNECTION_URL
+            developerConnection POM_RETROFIT_SCM_CONNECTION_URL
+            url POM_RETROFIT_URL
+        }
+
+        licenses {
+            license {
+                name 'MIT License'
+                url 'https://opensource.org/licenses/MIT'
+                distribution 'repo'
+            }
+        }
+
+        developers {
+            developer {
+                id 'burnoo'
+                name 'Bruno Wieczorek'
+                email 'bruno.wieczorek@droidsonroids.pl'
+                roles {
+                    role 'developer'
+                }
+            }
+            developer {
+                id 'koral'
+                name 'Karol Wrótniak'
+                email 'karol.wrotniak@droidsonroids.pl'
+                roles {
+                    role 'developer'
+                }
+            }
+        }
+    }
 }
 
 sourceCompatibility = "1.7"
