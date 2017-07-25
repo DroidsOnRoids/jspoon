@@ -9,7 +9,10 @@ import java.util.Map;
 public class Jspoon {
     private Map<String, HtmlAdapter<?>> adapterCache;
 
-    /** Returns a new Jspoon instance. */
+    /**
+     * Creates a new Jspoon instance.
+     * @return a new Jspoon instance
+     */
     public static Jspoon create() {
         return new Jspoon();
     }
@@ -18,7 +21,12 @@ public class Jspoon {
         this.adapterCache = new LinkedHashMap<>();
     }
 
-    /** Returns a HTML adapter for {@code clazz}, creating it if necessary. */
+    /**
+     * Returns a HTML adapter for {@code clazz}, creating it if necessary.
+     * @param clazz Class for creating objects
+     * @param <T> Class for creating objects
+     * @return {@link HtmlAdapter} instance
+     */
     @SuppressWarnings("unchecked")
     public <T> HtmlAdapter<T> adapter(Class<T> clazz) {
         String key = clazz.getName();

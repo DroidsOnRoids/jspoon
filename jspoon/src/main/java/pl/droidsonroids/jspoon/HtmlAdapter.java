@@ -49,7 +49,11 @@ public class HtmlAdapter<T> {
         }
     }
 
-    /** Converts html string to {@code T} object. **/
+    /**
+     * Converts html string to {@code T} object.
+     * @param htmlContent String with HTML content
+     * @return Created object
+     */
     public T fromHtml(String htmlContent) {
         Element pageRoot = Jsoup.parse(htmlContent);
         return loadFromNode(pageRoot);
