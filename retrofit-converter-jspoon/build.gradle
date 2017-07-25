@@ -7,11 +7,11 @@ plugins {
 
 dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile project(':jspoon')
+    compile "pl.droidsonroids:jspoon:${POM_VERSION}"
 }
 
 group = POM_RETROFIT_GROUP
-version = POM_RETROFIT_VERSION
+version = POM_VERSION
 
 modifyPom {
     project {
