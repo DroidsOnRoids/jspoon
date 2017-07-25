@@ -10,11 +10,10 @@ import pl.droidsonroids.jspoon.HtmlAdapter;
 /**
  * Annotates a field to be mapped to a html element.
  *
- * A field annotated with this will receive the value corresponding to it's css
+ * A field annotated with this will receive the value corresponding to it's CSS
  * selector when the {@link HtmlAdapter#fromHtml(String)} is called.
  *
- * The field type can be any class or one of
- * the following types (or its primitive):
+ * Can be applied to any field of the following types (or their primitive equivalents)
  * String
  * Float
  * Double
@@ -23,10 +22,10 @@ import pl.droidsonroids.jspoon.HtmlAdapter;
  * Boolean
  * Date
  * {@link Element}
- * Or a List of any of these types.
+ * Any class with default contructor
+ * List of supported type
  *
- * Class can be also annotated with @Selector. Then there is no need to
- * annotate every field where with object of this class.
+ * It can also be used with a class, then you don't need to annotate every field inside it.
  */
 
 @Retention(RetentionPolicy.RUNTIME)
