@@ -29,25 +29,27 @@ import pl.droidsonroids.jspoon.HtmlAdapter;
  */
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.FIELD})
+@Target({ ElementType.TYPE, ElementType.FIELD })
 public @interface Selector {
     String NO_VALUE = "NO_VALUE";
 
-    /** Css query */
+    /**
+     * @return Css query
+     */
     String value();
 
-    /** Attribute or property of selected field. "text" is default. Also "html"/"innerHtml" or "outerHtml" is supported. */
+    /** @return Attribute or property of selected field. "text" is default. Also "html"/"innerHtml" or "outerHtml" is supported. */
     String attr() default "";
 
-    /** Regex for numbers and String, date format for Date. */
+    /** @return Regex for numbers and String, date format for Date. */
     String format() default NO_VALUE;
 
-    /** Locale string, used for Date and Float */
+    /** @return Locale string, used for Date and Float */
     String locale() default NO_VALUE;
 
-    /** Default String value if selected HTML element is empty */
+    /** @return Default String value if selected HTML element is empty */
     String defValue() default NO_VALUE;
 
-    /** Index of found HTML element */
+    /** @return Index of found HTML element */
     int index() default 0;
 }
