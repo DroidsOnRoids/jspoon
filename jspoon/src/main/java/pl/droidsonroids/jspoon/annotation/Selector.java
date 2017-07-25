@@ -33,9 +33,7 @@ import pl.droidsonroids.jspoon.HtmlAdapter;
 public @interface Selector {
     String NO_VALUE = "NO_VALUE";
 
-    /**
-     * @return Css query
-     */
+    /** @return Css query */
     String value();
 
     /** @return Attribute or property of selected field. "text" is default. Also "html"/"innerHtml" or "outerHtml" is supported. */
