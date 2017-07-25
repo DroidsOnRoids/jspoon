@@ -78,7 +78,7 @@ Java's `Locale` is used for parsing Floats, Doubles and Dates. You can override 
 ```
 If Jspoon doesn't find a HTML element it wont't set field's value unless you set the `defValue` parameter:
 ```java
-@Selector(value = "div > p > span", defValue="NO_TEXT") String text;
+@Selector(value = "div > p > span", defValue = "NO_TEXT") String text;
 ```
 
 ### Retrofit
@@ -86,7 +86,7 @@ Retrofit converter is available [here][retrofit-converter].
 
 ### Other libraries/inspirations
 * [jsoup][jsoup] - all HTML parsing in Jspoon is made by this library
-* [webGrude][webGrude] - when I had an idea I found this library. It was the biggest inspiration and I used some code from it
+* [webGrude][webGrude] - when I had an idea I found this library. It was the biggest inspiration and I used some ideas from it
 * [Moshi][Moshi] - I wanted to make Jspoon work with HTML the same way as Moshi works with JSON. I adapted caching mechanism (fields and adapters) from it.
 * [jsoup-annotations][jsoup-annotations] - similar to Jspoon
 
