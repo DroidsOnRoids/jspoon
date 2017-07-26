@@ -1,3 +1,6 @@
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/pl.droidsonroids/jspoon/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/pl.droidsonroids/jspoon)
+[![Javadocs](https://javadoc.io/badge/pl.droidsonroids/jspoon.svg?color=blue)](https://javadoc.io/doc/pl.droidsonroids/jspoon)
+
 # jspoon
 Jspoon is a Java library that provides parsing HTML into Java objects basing on CSS selectors. It uses [jsoup][jsoup] underneath as a HTML parser.
 
@@ -5,7 +8,7 @@ Jspoon is a Java library that provides parsing HTML into Java objects basing on 
 Insert the following dependency into your project's `build.gradle` file:
 ```gradle
 dependencies {
-    compile 'pl.droidsonroids:jspoon:1.0.0' //not working yet TODO
+    compile 'pl.droidsonroids:jspoon:1.0.0'
 }
 ```
 ## Usage
@@ -95,6 +98,4 @@ Retrofit converter is available [here][retrofit-converter].
    [webGrude]: <https://github.com/beothorn/webGrude>
    [Moshi]: <https://github.com/square/moshi>
    [jsoup-annotations]: <https://github.com/fcannizzaro/jsoup-annotations>
-   [retrofit-converter]: <https://github.com/DroidsOnRoids/Jspoon/tree/master/retrofit-converter-jspoon>
-   
-   
+   [retrofit-converter]: <https://github.com/DroidsOnRoids/jspoon/tree/master/retrofit-converter-jspoon>
