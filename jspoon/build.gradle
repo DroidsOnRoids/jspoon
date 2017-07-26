@@ -55,5 +55,13 @@ modifyPom {
     }
 }
 
+task javadoc(type: Javadoc, overwrite: true) {
+    source = sourceSets.main.allJava
+    classpath += sourceSets.main.compileClasspath
+    options {
+        links "http://docs.oracle.com/javase/7/docs/api/"
+    }
+}
+
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
