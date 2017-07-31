@@ -33,6 +33,7 @@ public class Example {
 
     private static void printPost(Post post) {
         System.out.println(post.title);
+        System.out.println(post.excerpt);
         System.out.println(post.imageUrl);
         System.out.println(String.join(", ", post.tags));
         System.out.println();

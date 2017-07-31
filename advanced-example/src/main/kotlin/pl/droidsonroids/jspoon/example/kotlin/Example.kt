@@ -14,6 +14,7 @@ class BlogPage {
 
 class Post {
     @Selector(".post-content > h2 > a") lateinit var title: String
+    @Selector(".excerpt") lateinit var excerpt: String
     @Selector(".post-featured-image > a > img", attr = "data-lazy-src") lateinit var imageUrl: String
     @Selector(".post-category > a") lateinit var tags: List<String>
 }
@@ -30,6 +31,7 @@ fun main(args: Array<String>) {
             .subscribe { blog ->
                 blog.posts.forEach {
                     println(it.title)
+                    println(it.excerpt)
                     println(it.imageUrl)
                     println(it.tags.joinToString())
                     println()
