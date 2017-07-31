@@ -12,7 +12,7 @@ Installation
 Insert the following dependency to `build.gradle` file of your project:
 ```gradle
 dependencies {
-    compile 'pl.droidsonroids.retrofit2:converter-jspoon:1.0.0' //not working yet TODO
+    compile 'pl.droidsonroids.retrofit2:converter-jspoon:1.0.0'
 }
 ```
 Example
