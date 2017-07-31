@@ -21,6 +21,3 @@ dependencies {
     compile project(":retrofit-converter-jspoon")
     compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
 }
-
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"

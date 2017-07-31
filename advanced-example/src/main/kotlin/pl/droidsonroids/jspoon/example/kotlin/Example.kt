@@ -1,4 +1,4 @@
-package pl.droidsonroids.jsoop.example
+package pl.droidsonroids.jspoon.example.kotlin
 
 import io.reactivex.Single
 import pl.droidsonroids.jspoon.annotation.Selector
@@ -8,7 +8,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-class Blog {
+class BlogPage {
     @Selector(".post") lateinit var posts: List<Post>
 }
 
@@ -20,7 +20,7 @@ class Post {
 
 interface BlogService {
     @GET("blog")
-    fun getBlogPage(@Query("page") pageNumber: Int): Single<Blog>
+    fun getBlogPage(@Query("page") pageNumber: Int): Single<BlogPage>
 }
 
 fun main(args: Array<String>) {
