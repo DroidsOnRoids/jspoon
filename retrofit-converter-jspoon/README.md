@@ -17,4 +17,4 @@ dependencies {
 ```
 Example
 --------
-[Kotlin + RxJava2](https://github.com/DroidsOnRoids/jspoon/tree/master/advanced-example)
+[Java/Kotlin + RxJava2](https://github.com/DroidsOnRoids/jspoon/tree/master/advanced-example)
