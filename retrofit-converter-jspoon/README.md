@@ -1,3 +1,6 @@
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/pl.droidsonroids.retrofit2/converter-jspoon/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/pl.droidsonroids/jspoon)
+[![Javadocs](https://javadoc.io/badge/pl.droidsonroids/jspoon.svg?color=blue)](https://javadoc.io/doc/pl.droidsonroids.retrofit2/converter-jspoon)
+
 jspoon Retrofit Converter
 ===============
 
