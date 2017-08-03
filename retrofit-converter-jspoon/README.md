@@ -4,7 +4,7 @@
 jspoon Retrofit Converter
 ===============
 
-A Retrofit `Converter` which uses jspoon for parsing body from HTML.
+A Retrofit `Converter` which uses [jspoon](https://github.com/DroidsOnRoids/jspoon) for parsing body from HTML.
 
 A default `Jspoon` instance will be created or one can be configured and passed to
 `JspoonConverterFactory.create()` to further control the convertion.
