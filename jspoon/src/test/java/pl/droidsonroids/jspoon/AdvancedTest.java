@@ -168,7 +168,7 @@ public class AdvancedTest {
                   format = "HH:mm dd.MM.yyyy") Date created;
         @Selector("h2") String header;
         @Selector("p") String content;
-        @Selector("li") List<String> tags;
+        @Selector("li") ArrayList<String> tags;
 
         AnnotatedPost() {
             //no-op
@@ -178,7 +178,7 @@ public class AdvancedTest {
             this.created = created;
             this.header = header;
             this.content = content;
-            this.tags = Arrays.asList(tags);
+            this.tags = new ArrayList<>(Arrays.asList(tags));
         }
 
         @Override
