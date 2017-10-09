@@ -1,5 +1,6 @@
 package pl.droidsonroids.jspoon;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Before;
@@ -29,31 +30,37 @@ public class SimpleTypesListTest {
 
     private static class BooleanModel {
         @Selector(".boolean") List<Boolean> booleanList;
+        @Selector(".boolean") ArrayList<Boolean> booleanArrayList;
     }
 
     private static class IntModel {
         @Selector(".int") List<Integer> integerList;
+        @Selector(".int") ArrayList<Integer> integerArrayList;
     }
     private static class StringModel {
         @Selector(".string") List<String> stringList;
+        @Selector(".string") ArrayList<String> stringArrayList;
     }
 
     @Test
-    public void booleanList() {
+    public void booleanLists() {
         BooleanModel booleanModel = createObjectFromHtml(BooleanModel.class);
         assertEquals(booleanModel.booleanList, Arrays.asList(true, false, false));
+        assertEquals(booleanModel.booleanArrayList, new ArrayList<>(Arrays.asList(true, false, false)));
     }
 
     @Test
-    public void integerList() {
+    public void integerLists() {
         IntModel intModel = createObjectFromHtml(IntModel.class);
         assertEquals(intModel.integerList, Arrays.asList(-200, 4, 32000));
+        assertEquals(intModel.integerArrayList, new ArrayList<>(Arrays.asList(-200, 4, 32000)));
     }
 
     @Test
-    public void stringList() {
+    public void stringLists() {
         StringModel stringModel = createObjectFromHtml(StringModel.class);
         assertEquals(stringModel.stringList, Arrays.asList("Test1", "", "Test2 ".trim()));
+        assertEquals(stringModel.stringArrayList, new ArrayList<>(Arrays.asList("Test1", "", "Test2 ".trim())));
     }
 
     private <T> T createObjectFromHtml(Class<T> className) {
