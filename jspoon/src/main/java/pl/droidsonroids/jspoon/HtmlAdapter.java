@@ -39,7 +39,7 @@ public class HtmlAdapter<T> {
             }
 
             // Not annotated field - List of annotated type
-            if (selector == null && fieldClass.equals(List.class)) {
+            if (selector == null && List.class.isAssignableFrom(fieldClass)) {
                 selector = getSelectorFromListType(field);
             }
 
@@ -67,7 +67,7 @@ public class HtmlAdapter<T> {
 
     private void addCachedHtmlField(Field field, Selector selector, Class<?> fieldClass) {
         HtmlField<T> htmlField;
-        if (fieldClass.equals(List.class)) {
+        if (List.class.isAssignableFrom(fieldClass)) {
             htmlField = new HtmlListField<>(field, selector);
         } else if (Utils.isSimple(fieldClass)) {
             htmlField = new HtmlSimpleField<>(field, selector);
