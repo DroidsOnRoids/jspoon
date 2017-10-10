@@ -51,7 +51,7 @@ It looks for the first occurrence in HTML and sets its value to a field.
 * `Date`
 * Jsoup's `Element`
 * Any class with  default contructor
-* `List` of supported type
+* `List` (or its superclass/superinterface) of supported type
 
 It can also be used with a class, then you don't need to annotate every field inside it.
 
