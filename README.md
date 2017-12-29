@@ -49,8 +49,9 @@ It looks for the first occurrence in HTML and sets its value to a field.
 * `Float`
 * `Double`
 * `Date`
+* `BigDecimal`
 * Jsoup's `Element`
-* Any class with  default contructor
+* Any class with  default constructor
 * `List` (or its superclass/superinterface) of supported type
 
 It can also be used with a class, then you don't need to annotate every field inside it.

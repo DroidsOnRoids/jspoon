@@ -1,7 +1,9 @@
 package pl.droidsonroids.jspoon;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,6 +14,7 @@ import java.util.regex.Pattern;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import pl.droidsonroids.jspoon.annotation.Selector;
+import pl.droidsonroids.jspoon.exception.BigDecimalParseException;
 import pl.droidsonroids.jspoon.exception.DateParseException;
 import pl.droidsonroids.jspoon.exception.DoubleParseException;
 import pl.droidsonroids.jspoon.exception.FieldSetException;
@@ -122,6 +125,15 @@ abstract class HtmlField<T> {
             }
         }
 
+        if (clazz.equals(BigDecimal.class)) {
+            DecimalFormat decimalFormat = getDecimalFormat();
+            try {
+                return (U) decimalFormat.parse(value);
+            } catch (ParseException e) {
+                throw new BigDecimalParseException(value, format, locale);
+            }
+        }
+
         return (U) value;
     }
 
@@ -145,7 +157,9 @@ abstract class HtmlField<T> {
                 value = node.attr(attribute);
                 break;
         }
-        if (!clazz.equals(Date.class) && !format.equals(Selector.NO_VALUE)) {
+        if (!clazz.equals(Date.class)
+            && !clazz.equals(BigDecimal.class)
+            && !format.equals(Selector.NO_VALUE)) {
             Pattern pattern = Pattern.compile(format);
             Matcher matcher = pattern.matcher(value);
             boolean found = matcher.find();
@@ -165,6 +179,17 @@ abstract class HtmlField<T> {
         } else {
             return new SimpleDateFormat(format, locale);
         }
+    }
+
+    private DecimalFormat getDecimalFormat() {
+        DecimalFormat instance;
+        if (Selector.NO_VALUE.equals(format)) {
+            instance = (DecimalFormat) DecimalFormat.getInstance(locale);
+        } else {
+            instance = new DecimalFormat(format);
+        }
+        instance.setParseBigDecimal(true);
+        return instance;
     }
 
     private Number getNumberFromString(String value) throws ParseException {
