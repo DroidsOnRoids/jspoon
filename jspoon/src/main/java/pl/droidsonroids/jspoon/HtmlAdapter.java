@@ -18,6 +18,7 @@ import org.jsoup.nodes.Element;
 
 import pl.droidsonroids.jspoon.annotation.Selector;
 import pl.droidsonroids.jspoon.exception.ConstrucorNotFoundException;
+import pl.droidsonroids.jspoon.exception.EmptySelectorException;
 import pl.droidsonroids.jspoon.exception.ObjectCreationException;
 
 /**
@@ -53,6 +54,10 @@ public class HtmlAdapter<T> {
             if (selector != null) {
                 addCachedHtmlField(field, selector, fieldClass);
             }
+        }
+
+        if (htmlFieldCache.isEmpty()) {
+            throw new EmptySelectorException( clazz );
         }
     }
 

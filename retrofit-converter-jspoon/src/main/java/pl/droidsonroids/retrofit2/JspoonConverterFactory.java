@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import okhttp3.ResponseBody;
 import pl.droidsonroids.jspoon.Jspoon;
+import pl.droidsonroids.jspoon.exception.EmptySelectorException;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 
@@ -24,7 +25,12 @@ public final class JspoonConverterFactory extends Converter.Factory {
 
     @Override
     public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
-        return new JspoonResponseBodyConverter<>(retrofit.baseUrl(),
+
+        try {
+            return new JspoonResponseBodyConverter<>(retrofit.baseUrl(),
             jspoon.adapter((Class<?>) type));
+        } catch (EmptySelectorException ex) {
+            return null; // Let retrofit choose another converter
+        }
     }
 }
