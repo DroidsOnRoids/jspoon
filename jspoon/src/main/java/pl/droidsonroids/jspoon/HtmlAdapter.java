@@ -17,7 +17,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 
 import pl.droidsonroids.jspoon.annotation.Selector;
-import pl.droidsonroids.jspoon.exception.ConstrucorNotFoundException;
+import pl.droidsonroids.jspoon.exception.ConstructorNotFoundException;
 import pl.droidsonroids.jspoon.exception.EmptySelectorException;
 import pl.droidsonroids.jspoon.exception.ObjectCreationException;
 
@@ -148,7 +148,7 @@ public class HtmlAdapter<T> {
         try {
             constructor = clazz.getDeclaredConstructor();
         } catch (NoSuchMethodException e) {
-            throw new ConstrucorNotFoundException(clazz.getSimpleName());
+            throw new ConstructorNotFoundException(clazz.getSimpleName());
         }
         constructor.setAccessible(true);
         try {
