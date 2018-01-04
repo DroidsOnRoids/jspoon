@@ -24,6 +24,7 @@ public final class JspoonConverterFactory extends Converter.Factory {
 
     @Override
     public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
-        return new JspoonResponseBodyConverter<>(jspoon.adapter((Class<?>) type));
+        return new JspoonResponseBodyConverter<>(retrofit.baseUrl(),
+            jspoon.adapter((Class<?>) type));
     }
 }

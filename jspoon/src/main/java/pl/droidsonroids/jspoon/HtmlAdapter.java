@@ -1,14 +1,21 @@
 package pl.droidsonroids.jspoon;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
+
 import pl.droidsonroids.jspoon.annotation.Selector;
 import pl.droidsonroids.jspoon.exception.ConstrucorNotFoundException;
 import pl.droidsonroids.jspoon.exception.ObjectCreationException;
@@ -57,6 +64,51 @@ public class HtmlAdapter<T> {
     public T fromHtml(String htmlContent) {
         Element pageRoot = Jsoup.parse(htmlContent);
         return loadFromNode(pageRoot);
+    }
+
+    /**
+     * Converts the provided {@code InputStream} to a {@code T} object.
+     * <p>
+     * Does not close the {@code InputStream}.
+     *
+     * @param inputStream InputStream with HTML content
+     * @return Created object of type {@code T}
+     * @throws IOException If I/O error occurs while reading the {@code InputStream}
+     */
+    public T fromInputStream(InputStream inputStream) throws IOException {
+        return fromInputStream(inputStream, null);
+    }
+
+    /**
+     * Converts the provided {@code inputStream} to a {@code T} object.
+     * <p>
+     * Does not close the {@code InputStream}.
+     *
+     * @param inputStream InputStream with HTML content
+     * @param baseUrl The URL where the HTML was retrieved from, to resolve relative links against.
+     * @return Created object of type {@code T}
+     * @throws IOException If I/O error occurs while reading the {@code InputStream}
+     */
+    public T fromInputStream(InputStream inputStream, URL baseUrl) throws IOException {
+        return fromInputStream(inputStream, null, baseUrl);
+    }
+
+    /**
+     * Converts the provided {@code inputStream} to a {@code T} object.
+     * <p>
+     * Does not close the {@code InputStream}.
+     *
+     * @param inputStream InputStream with HTML content
+     * @param charset Charset to use
+     * @param baseUrl The URL where the HTML was retrieved from, to resolve relative links against.
+     * @return Created object of type {@code T}
+     * @throws IOException If I/O error occurs while reading the {@code InputStream}
+     */
+    public T fromInputStream(InputStream inputStream, Charset charset, URL baseUrl) throws IOException {
+        String urlToUse = baseUrl != null ? baseUrl.toString() : null;
+        String charsetToUse = charset != null ? charset.name() : null;
+        Element root = Jsoup.parse(inputStream, charsetToUse, urlToUse);
+        return loadFromNode(root);
     }
 
     private Selector getSelectorFromListType(Field field) {
