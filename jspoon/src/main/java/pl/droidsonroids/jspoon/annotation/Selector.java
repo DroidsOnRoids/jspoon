@@ -21,8 +21,9 @@ import pl.droidsonroids.jspoon.HtmlAdapter;
  * Long
  * Boolean
  * Date
+ * BigDecimal
  * {@link Element}
- * Any class with default contructor
+ * Any class with default constructor
  * List of supported type
  *
  * It can also be used with a class, then you don't need to annotate every field inside it.
