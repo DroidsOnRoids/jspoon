@@ -2,12 +2,12 @@ plugins {
     id 'java'
     id 'maven-publish'
     id 'signing'
-    id 'com.bmuschko.nexus' version '2.3.1'
+    id 'com.bmuschko.nexus' version "2.3.1"
 }
 
 dependencies {
-    compile 'org.jsoup:jsoup:1.10.3'
-    testCompile 'junit:junit:4.12'
+    compile "org.jsoup:jsoup:$versions.jsoup"
+    testCompile "junit:junit:$versions.junit"
 }
 
 group = POM_GROUP
