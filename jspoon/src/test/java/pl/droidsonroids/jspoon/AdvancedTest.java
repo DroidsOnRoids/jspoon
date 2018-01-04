@@ -94,7 +94,7 @@ public class AdvancedTest {
         PageLFieldWithoutAnnotation page = htmlAdapter.fromHtml(HTML_CONTENT);
 
         DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, CUSTOM_DEFAULT_LOCALE);
-        
+
         Post firstPost = new AnnotatedPost(dateFormat.parse("Apr 11, 2017 11:20:00 AM"), "Header1", "Content1", "Tag1", "Tag3", "Tag4");
 
         assertEquals(page.quote, "Blah, blah.");

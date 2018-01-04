@@ -156,5 +156,5 @@ public class SimpleTypesTest {
     private <T> T createObjectFromHtml(Class<T> className) {
         HtmlAdapter<T> htmlAdapter = jspoon.adapter(className);
         return htmlAdapter.fromHtml(HTML_CONTENT);
-    } 
+    }
 }
