@@ -1,6 +1,5 @@
 ext {
-    versions = [nexus        : '2.3.1',
-                kotlin       : '1.2.10',
+    versions = [kotlin       : '1.2.10',
                 sdkVersion   : 27,
                 minSdkVersion: 23,
                 buildTools   : '27.0.1',
