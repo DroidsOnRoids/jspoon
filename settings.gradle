@@ -1,1 +1,40 @@
-include ':jspoon', ':retrofit-converter-jspoon',':advanced-example', ':android-example'
+include ':jspoon', ':retrofit-converter-jspoon', ':advanced-example'
+if (findSdkLocation(getRootDir()) != null) include ":android-example"
+
+private static def findSdkLocation(File rootDir) {
+    def localProperty = readLocalProperties(rootDir)
+    if (localProperty != null) {
+        return localProperty
+    }
+
+    def envVar = System.getenv('ANDROID_HOME')
+    if (envVar != null) {
+        return envVar
+    }
+
+    def systemProperty = System.getProperty('android.home')
+    if (systemProperty != null) {
+        return systemProperty
+    }
+    return null
+}
+
+private static String readLocalProperties(File rootDir) {
+    def file = new File(rootDir, 'local.properties')
+    if (file.isFile()) {
+        return file.withReader('UTF-8') {
+            def properties = new Properties()
+            properties.load(it)
+            String sdkDirProp = properties['sdk.dir']
+            if (sdkDirProp != null) {
+                File sdkFolder = new File(sdkDirProp)
+                if (!sdkFolder.absolute) {
+                    sdkFolder = new File(rootDir, sdkDirProp)
+                }
+                return sdkFolder.absolutePath
+            }
+            return null
+        }
+    }
+    return null
+}

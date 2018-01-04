@@ -1,0 +1,15 @@
+ext {
+    versions = [kotlin       : '1.2.10',
+                sdkVersion   : 27,
+                minSdkVersion: 23,
+                buildTools   : '27.0.1',
+                gradle       : '3.0.1',
+                support      : '27.0.2',
+                constraint   : '1.0.2',
+                rxjava       : '2.3.0',
+                jsoup        : '1.10.3',
+                junit        : '4.12',
+                retrofit     : '2.3.0',
+                mockwebserver: '3.9.1',
+                mockito      : '2.13.0']
+}

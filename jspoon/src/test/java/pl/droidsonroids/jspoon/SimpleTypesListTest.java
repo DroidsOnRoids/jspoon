@@ -37,6 +37,7 @@ public class SimpleTypesListTest {
         @Selector(".int") List<Integer> integerList;
         @Selector(".int") ArrayList<Integer> integerArrayList;
     }
+
     private static class StringModel {
         @Selector(".string") List<String> stringList;
         @Selector(".string") ArrayList<String> stringArrayList;

@@ -8,14 +8,11 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
-
 import pl.droidsonroids.jspoon.annotation.Selector;
 import pl.droidsonroids.jspoon.exception.ConstructorNotFoundException;
 import pl.droidsonroids.jspoon.exception.EmptySelectorException;
@@ -57,12 +54,13 @@ public class HtmlAdapter<T> {
         }
 
         if (htmlFieldCache.isEmpty()) {
-            throw new EmptySelectorException( clazz );
+            throw new EmptySelectorException(clazz);
         }
     }
 
     /**
      * Converts html string to {@code T} object.
+     *
      * @param htmlContent String with HTML content
      * @return Created object
      */

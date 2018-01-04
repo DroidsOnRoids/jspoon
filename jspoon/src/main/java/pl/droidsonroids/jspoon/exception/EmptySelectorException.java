@@ -7,6 +7,6 @@ public class EmptySelectorException extends RuntimeException {
 
     public EmptySelectorException(Class type) {
         super(String.format("Unable to find @Selector on type '%s', or its fields. "
-            + "Is this type intended for parsing HTML?", type));
+                + "Is this type intended for parsing HTML?", type));
     }
 }

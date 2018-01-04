@@ -11,6 +11,7 @@ public class Jspoon {
 
     /**
      * Creates a new Jspoon instance.
+     *
      * @return a new Jspoon instance
      */
     public static Jspoon create() {
@@ -23,6 +24,7 @@ public class Jspoon {
 
     /**
      * Returns a HTML adapter for {@code clazz}, creating it if necessary.
+     *
      * @param clazz Class for creating objects
      * @param <T> Class for creating objects
      * @return {@link HtmlAdapter} instance

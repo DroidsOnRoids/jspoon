@@ -158,8 +158,8 @@ abstract class HtmlField<T> {
                 break;
         }
         if (!clazz.equals(Date.class)
-            && !clazz.equals(BigDecimal.class)
-            && !format.equals(Selector.NO_VALUE)) {
+                && !clazz.equals(BigDecimal.class)
+                && !format.equals(Selector.NO_VALUE)) {
             Pattern pattern = Pattern.compile(format);
             Matcher matcher = pattern.matcher(value);
             boolean found = matcher.find();
