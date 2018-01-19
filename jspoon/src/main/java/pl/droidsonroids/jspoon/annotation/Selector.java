@@ -4,7 +4,10 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
 import org.jsoup.nodes.Element;
+
+import pl.droidsonroids.jspoon.ElementConverter;
 import pl.droidsonroids.jspoon.HtmlAdapter;
 
 /**
@@ -51,4 +54,7 @@ public @interface Selector {
 
     /** @return Index of found HTML element */
     int index() default 0;
+
+    /** @return The converter to be used for the matched {@link Element element} */
+    Class<? extends ElementConverter> converter() default ElementConverter.class;
 }

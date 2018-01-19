@@ -122,7 +122,9 @@ public class HtmlAdapter<T> {
 
     private void addCachedHtmlField(Field field, Selector selector, Class<?> fieldClass) {
         HtmlField<T> htmlField;
-        if (List.class.isAssignableFrom(fieldClass)) {
+        if (!selector.converter().equals(ElementConverter.class)) {
+            htmlField = new HtmlFieldWithConverter<>(field, selector);
+        } else if (List.class.isAssignableFrom(fieldClass)) {
             htmlField = new HtmlListField<>(field, selector);
         } else if (Utils.isSimple(fieldClass)) {
             htmlField = new HtmlSimpleField<>(field, selector);
