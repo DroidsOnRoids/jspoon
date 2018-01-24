@@ -56,5 +56,6 @@ public @interface Selector {
     int index() default 0;
 
     /** @return The converter to be used for the matched {@link Element element} */
+    @SuppressWarnings("rawtypes")
     Class<? extends ElementConverter> converter() default ElementConverter.class;
 }

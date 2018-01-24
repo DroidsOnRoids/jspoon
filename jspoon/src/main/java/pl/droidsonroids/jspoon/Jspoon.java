@@ -7,6 +7,7 @@ import java.util.Map;
  * Coordinates binding between HTML values and Java objects.
  */
 public class Jspoon {
+
     private Map<String, HtmlAdapter<?>> adapterCache;
 
     /**
@@ -29,7 +30,6 @@ public class Jspoon {
      * @param <T> Class for creating objects
      * @return {@link HtmlAdapter} instance
      */
-    @SuppressWarnings("unchecked")
     public <T> HtmlAdapter<T> adapter(Class<T> clazz) {
         String key = clazz.getName();
         if (adapterCache.containsKey(key)) {
