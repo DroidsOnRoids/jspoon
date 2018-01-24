@@ -16,8 +16,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import pl.droidsonroids.jspoon.annotation.Selector;
+import pl.droidsonroids.jspoon.exception.BigDecimalParseException;
 import pl.droidsonroids.jspoon.exception.DateParseException;
 import pl.droidsonroids.jspoon.exception.FieldSetException;
+import pl.droidsonroids.jspoon.exception.FloatParseException;
 
 abstract class HtmlField<T> {
 
@@ -103,11 +105,11 @@ abstract class HtmlField<T> {
         }
 
         if (fieldType.equals(Float.class)) {
-            return fieldType.cast(Float.valueOf(getNumber(value).floatValue()));
+            return fieldType.cast(getFloat(value));
         }
 
         if (fieldType.equals(Double.class)) {
-            return fieldType.cast(Double.valueOf(getNumber(value).doubleValue()));
+            return fieldType.cast(getDouble(value));
         }
 
         if (fieldType.equals(BigDecimal.class)) {
@@ -174,18 +176,26 @@ abstract class HtmlField<T> {
             return (BigDecimal) decimalFormat.parse(value);
         }
         catch (ParseException e) {
-            throw new DateParseException(value, format, locale);
+            throw new BigDecimalParseException(value, format, locale);
         }
 
     }
 
-    private Number getNumber(String value) {
+    private Double getDouble(String value) {
         try {
-            NumberFormat numberFormat = NumberFormat.getInstance(locale);
-            return numberFormat.parse(value);
+            return NumberFormat.getInstance(locale).parse(value).doubleValue();
         }
         catch (ParseException e) {
             throw new DateParseException(value, format, locale);
+        }
+    }
+
+    private Float getFloat(String value) {
+        try {
+            return Float.valueOf(NumberFormat.getInstance(locale).parse(value).floatValue());
+        }
+        catch (ParseException e) {
+            throw new FloatParseException(value, locale);
         }
     }
 }
