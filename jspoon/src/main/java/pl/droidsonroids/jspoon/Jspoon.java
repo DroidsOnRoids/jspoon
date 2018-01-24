@@ -33,13 +33,9 @@ public class Jspoon {
 
     @SuppressWarnings("unchecked")
     public <T> HtmlAdapter<T> adapter(Class<T> clazz) {
-        HtmlAdapter<T> htmlAdapter;
-        if (adapterCache.containsKey(clazz)) {
-            htmlAdapter = (HtmlAdapter<T>) adapterCache.get(clazz);
-        } else {
-            htmlAdapter = new HtmlAdapter<>(this, clazz);
-            adapterCache.put(clazz, htmlAdapter);
+        if (!adapterCache.containsKey(clazz)) {
+            adapterCache.put(clazz, new HtmlAdapter<>(this, clazz));
         }
-        return htmlAdapter;
+        return (HtmlAdapter<T>) adapterCache.get(clazz);
     }
 }
