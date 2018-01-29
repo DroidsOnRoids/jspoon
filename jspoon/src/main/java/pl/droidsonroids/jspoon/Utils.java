@@ -19,4 +19,25 @@ class Utils {
                 clazz.equals(Date.class) ||
                 clazz.equals(Element.class);
     }
+
+    static Object getDefaultValueForType(Class clazz) {
+        if (!clazz.isPrimitive())
+            return null;
+        if (clazz.equals(boolean.class))
+            return false;
+        if (clazz.equals(int.class)
+            || clazz.equals(byte.class)
+            || clazz.equals(short.class))
+            return 0;
+        if (clazz.equals(long.class))
+            return 0L;
+        if (clazz.equals(float.class))
+            return 0F;
+        if (clazz.equals(double.class))
+            return 0D;
+        if (clazz.equals(char.class))
+            return '\u0000';
+
+        throw new AssertionError("Missed primitive type: " + clazz);
+    }
 }

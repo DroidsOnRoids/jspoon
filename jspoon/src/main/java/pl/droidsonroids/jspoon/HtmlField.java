@@ -11,8 +11,10 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
 import pl.droidsonroids.jspoon.annotation.Selector;
 import pl.droidsonroids.jspoon.exception.BigDecimalParseException;
 import pl.droidsonroids.jspoon.exception.DateParseException;
@@ -76,11 +78,18 @@ abstract class HtmlField<T> {
     }
 
     @SuppressWarnings("unchecked")
-    <U> U instanceForNode(Element node, Class<U> clazz) {
+    <U> U instanceForNode(Element node, Class<U> clazz, T enclosingInstance) {
         if (clazz.equals(Element.class)) {
             return (U) node;
         }
         String value = getValue(node, clazz);
+
+        if (value.equals(defValue)) {
+            // check first if the field already has a value assigned
+            Object fieldValue = getFieldValue(enclosingInstance, null);
+            if (fieldValue != null)
+                return (U) fieldValue;
+        }
 
         if (clazz.equals(String.class)) {
             return (U) value;
@@ -135,6 +144,28 @@ abstract class HtmlField<T> {
         }
 
         return (U) value;
+    }
+
+    <U> U getFieldValue(T enclosingInstance, U defaultValue) {
+        try {
+            field.setAccessible(true);
+            Object assignedValue = field.get(enclosingInstance);
+
+            if (field.getType().isPrimitive()) {
+                // Primitive types always have a default value, so we check
+                // whether the value is different from the jvm default
+                Object primitiveDefault = Utils.getDefaultValueForType(field.getType());
+                if (assignedValue.equals(primitiveDefault))
+                    assignedValue = defaultValue;
+            }
+            if (assignedValue == null)
+                assignedValue = defaultValue;
+
+            return (U) assignedValue;
+        } catch (IllegalAccessException e) {
+            // do nothing, let the default value from the annotation take over
+            return defaultValue;
+        }
     }
 
     private <U> String getValue(Element node, Class<U> clazz) {

@@ -22,14 +22,14 @@ class HtmlListField<T> extends HtmlField<T> {
         Type type = ((ParameterizedType) genericType).getActualTypeArguments()[0];
         Class<?> listClass = (Class<?>) type;
 
-        setFieldOrThrow(field, newInstance, populateList(jspoon, nodes, listClass));
+        setFieldOrThrow(field, newInstance, populateList(jspoon, nodes, listClass, newInstance));
     }
 
-    private <V> List<V> populateList(Jspoon jspoon, Elements nodes, Class<V> listClazz) {
+    private <V> List<V> populateList(Jspoon jspoon, Elements nodes, Class<V> listClazz, T newInstance) {
         List<V> newInstanceList = new ArrayList<>();
         if (Utils.isSimple(listClazz)) {
             for (Element node : nodes) {
-                newInstanceList.add(instanceForNode(node, listClazz));
+                newInstanceList.add(instanceForNode(node, listClazz, newInstance));
             }
         } else {
             HtmlAdapter<V> htmlAdapter = jspoon.adapter(listClazz);
@@ -37,6 +37,10 @@ class HtmlListField<T> extends HtmlField<T> {
                 newInstanceList.add(htmlAdapter.loadFromNode(node));
             }
         }
+
+        if (newInstanceList.isEmpty()) // See if there's already a default value
+            newInstanceList = getFieldValue(newInstance, newInstanceList);
+
         return newInstanceList;
     }
 }
