@@ -29,7 +29,6 @@ public class DefaultValueTest {
     public void defaultValueTest() {
         HtmlAdapter<Model> htmlAdapter = jspoon.adapter(Model.class);
         Model model = htmlAdapter.fromHtml("<div></div>");
-        //assertEquals("NO_VALUE", model.text);  // bad test case when set defValue is the same result as unset defValue
         assertEquals("DEFAULT_VALUE", model.text); // since defValue explicitly defined
         assertEquals("hello", model.text2); // defValue takes precedent as its whatever would be parsed from Element
         assertEquals("helloworld", model.text3); // no defValue, let's leave whatever is set
