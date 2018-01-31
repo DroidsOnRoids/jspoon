@@ -1,10 +1,11 @@
 package pl.droidsonroids.jspoon;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
-import pl.droidsonroids.jspoon.annotation.Selector;
 
-import static org.junit.Assert.assertEquals;
+import pl.droidsonroids.jspoon.annotation.Selector;
 
 public class AttributeTest {
     private final static String HTML_CONTENT = "<img "
@@ -30,6 +31,9 @@ public class AttributeTest {
 
     private static class HtmlAttributesModel {
         @Selector("div") String text;
+        //"default" by javadocs attr value should have the same result as no attr value above
+        @Selector(value = "div", attr = "text") String text2;
+
         @Selector(value = "div", attr = "html") String html;
         @Selector(value = "div", attr = "innerHtml") String innerHtml;
         @Selector(value = "div", attr = "outerHtml") String outerHtml;
@@ -49,6 +53,7 @@ public class AttributeTest {
     public void htmlAttributes() {
         HtmlAttributesModel htmlAttributesModel = createObjectFromHtml(HtmlAttributesModel.class);
         assertEquals(htmlAttributesModel.text, "test");
+        assertEquals(htmlAttributesModel.text2, "test");
         assertEquals(htmlAttributesModel.html, "<p>test</p>");
         assertEquals(htmlAttributesModel.innerHtml, "<p>test</p>");
         assertEquals(htmlAttributesModel.outerHtml.replaceAll("[\n ]", ""), "<div><p>test</p></div>");

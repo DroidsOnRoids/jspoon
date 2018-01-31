@@ -35,13 +35,14 @@ import pl.droidsonroids.jspoon.HtmlAdapter;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.FIELD })
 public @interface Selector {
-    String NO_VALUE = "NO_VALUE";
+
+    static final String NO_VALUE = "NO_VALUE";
 
     /** @return Css query */
     String value();
 
     /** @return Attribute or property of selected field. "text" is default. Also "html"/"innerHtml" or "outerHtml" is supported. */
-    String attr() default "";
+    String attr() default "text";
 
     /** @return Regex for numbers and String, date format for Date. */
     String format() default NO_VALUE;
