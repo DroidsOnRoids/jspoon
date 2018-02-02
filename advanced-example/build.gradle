@@ -11,12 +11,15 @@ buildscript {
 
 sourceSets {
     main.kotlin.srcDirs += 'src/main/kotlin'
+    main.java.srcDirs += 'src/test'
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin"
 
-    compile project(":jspoon")
-    compile project(":retrofit-converter-jspoon")
-    compile "com.squareup.retrofit2:adapter-rxjava2:$versions.rxjava"
+    implementation project(":jspoon")
+    implementation project(":retrofit-converter-jspoon")
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$versions.rxjava"
+
+    testImplementation "junit:junit:$versions.junit"
 }
