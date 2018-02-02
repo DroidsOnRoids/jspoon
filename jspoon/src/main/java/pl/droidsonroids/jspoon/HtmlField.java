@@ -11,8 +11,10 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
 import pl.droidsonroids.jspoon.annotation.Selector;
 import pl.droidsonroids.jspoon.exception.BigDecimalParseException;
 import pl.droidsonroids.jspoon.exception.DateParseException;
@@ -67,6 +69,9 @@ abstract class HtmlField<T> {
     }
 
     static void setFieldOrThrow(Field field, Object newInstance, Object value) {
+        if (value == null || Selector.NO_VALUE.equals(value)){
+            return;
+        }
         try {
             field.setAccessible(true);
             field.set(newInstance, value);
@@ -134,7 +139,9 @@ abstract class HtmlField<T> {
             }
         }
 
-        return (U) value;
+        // unsupported field type
+        // or String field but selected Element does not exist and no set defValue
+        return null;
     }
 
     private <U> String getValue(Element node, Class<U> clazz) {
@@ -144,6 +151,7 @@ abstract class HtmlField<T> {
         String value;
         switch (attribute) {
             case "":
+            case "text":
                 value = node.text();
                 break;
             case "html":
