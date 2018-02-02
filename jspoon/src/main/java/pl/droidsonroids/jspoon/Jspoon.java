@@ -1,13 +1,14 @@
 package pl.droidsonroids.jspoon;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Coordinates binding between HTML values and Java objects.
  */
 public class Jspoon {
-    private Map<String, HtmlAdapter<?>> adapterCache;
+
+    private Map<Class<?>, HtmlAdapter<?>> adapterCache;
 
     /**
      * Creates a new Jspoon instance.
@@ -19,7 +20,7 @@ public class Jspoon {
     }
 
     private Jspoon() {
-        this.adapterCache = new LinkedHashMap<>();
+        this.adapterCache = new ConcurrentHashMap<>();
     }
 
     /**
@@ -29,15 +30,12 @@ public class Jspoon {
      * @param <T> Class for creating objects
      * @return {@link HtmlAdapter} instance
      */
+
     @SuppressWarnings("unchecked")
     public <T> HtmlAdapter<T> adapter(Class<T> clazz) {
-        String key = clazz.getName();
-        if (adapterCache.containsKey(key)) {
-            return (HtmlAdapter<T>) adapterCache.get(key);
-        } else {
-            HtmlAdapter<T> htmlAdapter = new HtmlAdapter<>(this, clazz);
-            adapterCache.put(key, htmlAdapter);
-            return htmlAdapter;
+        if (!adapterCache.containsKey(clazz)) {
+            adapterCache.put(clazz, new HtmlAdapter<>(this, clazz));
         }
+        return (HtmlAdapter<T>) adapterCache.get(clazz);
     }
 }

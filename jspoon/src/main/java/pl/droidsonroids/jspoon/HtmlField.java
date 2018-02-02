@@ -18,12 +18,12 @@ import org.jsoup.select.Elements;
 import pl.droidsonroids.jspoon.annotation.Selector;
 import pl.droidsonroids.jspoon.exception.BigDecimalParseException;
 import pl.droidsonroids.jspoon.exception.DateParseException;
-import pl.droidsonroids.jspoon.exception.DoubleParseException;
 import pl.droidsonroids.jspoon.exception.FieldSetException;
 import pl.droidsonroids.jspoon.exception.FloatParseException;
 
 abstract class HtmlField<T> {
-    Field field;
+
+    protected Field field;
     private String cssQuery;
     private String attribute;
     private String format;
@@ -49,17 +49,13 @@ abstract class HtmlField<T> {
         }
     }
 
-    public abstract void setValue(Jspoon jspoon, Element node, T newInstance);
+    protected abstract void setValue(Jspoon jspoon, Element node, T newInstance);
 
-    Element selectChild(Element parent) {
-        return getElementAtIndexOrNull(parent);
-    }
-
-    Elements selectChildren(Element node) {
+    protected Elements selectChildren(Element node) {
         return node.select(cssQuery);
     }
 
-    private Element getElementAtIndexOrNull(Element parent) {
+    protected Element selectChild(Element parent) {
         Elements elements = selectChildren(parent);
         int size = elements.size();
         if (size == 0 || size <= index) {
@@ -75,68 +71,52 @@ abstract class HtmlField<T> {
         try {
             field.setAccessible(true);
             field.set(newInstance, value);
-        } catch (IllegalAccessException e) {
+        }
+        catch (IllegalAccessException e) {
             throw new FieldSetException(newInstance.getClass().getSimpleName(), field.getName());
         }
     }
 
-    @SuppressWarnings("unchecked")
-    <U> U instanceForNode(Element node, Class<U> clazz) {
-        if (clazz.equals(Element.class)) {
-            return (U) node;
-        }
-        String value = getValue(node, clazz);
+    protected <U> U instanceForNode(Element node, Class<U> fieldType) {
+        // if clazz.isPrimitive convert it to it's Object counterpart
+        fieldType = Utils.wrapToObject(fieldType);
 
-        if (clazz.equals(String.class)) {
-            return (U) value;
+        if (fieldType.isAssignableFrom(Element.class)) { // allow Element's super classes like Node as well
+            return fieldType.cast(node);
         }
 
-        if (clazz.equals(Integer.class) || clazz.equals(int.class)) {
-            return (U) Integer.valueOf(value);
+        String value = getValue(node, fieldType);
+
+        if (fieldType.equals(String.class)) {
+            return fieldType.cast(value);
         }
 
-        if (clazz.equals(Long.class) || clazz.equals(long.class)) {
-            return (U) Long.valueOf(value);
+        if (fieldType.equals(Integer.class)) {
+            return fieldType.cast(Integer.valueOf(value));
         }
 
-        if (clazz.equals(Boolean.class) || clazz.equals(boolean.class)) {
-            return (U) Boolean.valueOf(value);
+        if (fieldType.equals(Long.class)) {
+            return fieldType.cast(Long.valueOf(value));
         }
 
-        if (clazz.equals(Date.class)) {
-            DateFormat dateFormat = getDateFormat();
-            try {
-                return (U) dateFormat.parse(value);
-            } catch (ParseException e) {
-                throw new DateParseException(value, format, locale);
-            }
+        if (fieldType.equals(Boolean.class)) {
+            return fieldType.cast(Boolean.valueOf(value));
         }
 
-        if (clazz.equals(Float.class) || clazz.equals(float.class)) {
-            try {
-                Number number = getNumberFromString(value);
-                return (U) Float.valueOf(number.floatValue());
-            } catch (ParseException e) {
-                throw new FloatParseException(value, locale);
-            }
+        if (fieldType.equals(Date.class)) {
+            return fieldType.cast(getDate(value));
         }
 
-        if (clazz.equals(Double.class) || clazz.equals(double.class)) {
-            try {
-                Number number = getNumberFromString(value);
-                return (U) Double.valueOf(number.floatValue());
-            } catch (ParseException e) {
-                throw new DoubleParseException(value, locale);
-            }
+        if (fieldType.equals(Float.class)) {
+            return fieldType.cast(getFloat(value));
         }
 
-        if (clazz.equals(BigDecimal.class)) {
-            DecimalFormat decimalFormat = getDecimalFormat();
-            try {
-                return (U) decimalFormat.parse(value);
-            } catch (ParseException e) {
-                throw new BigDecimalParseException(value, format, locale);
-            }
+        if (fieldType.equals(Double.class)) {
+            return fieldType.cast(getDouble(value));
+        }
+
+        if (fieldType.equals(BigDecimal.class)) {
+            return fieldType.cast(getBigDecimal(value));
         }
 
         // unsupported field type
@@ -144,29 +124,28 @@ abstract class HtmlField<T> {
         return null;
     }
 
-    private <U> String getValue(Element node, Class<U> clazz) {
+    private <U> String getValue(Element node, Class<U> fieldType) {
         if (node == null) {
             return defValue;
         }
         String value;
         switch (attribute) {
-            case "":
-            case "text":
-                value = node.text();
-                break;
-            case "html":
-            case "innerHtml":
-                value = node.html();
-                break;
-            case "outerHtml":
-                value = node.outerHtml();
-                break;
-            default:
-                value = node.attr(attribute);
-                break;
+        case "":
+        case "text":
+            value = node.text();
+            break;
+        case "html":
+        case "innerHtml":
+            value = node.html();
+            break;
+        case "outerHtml":
+            value = node.outerHtml();
+            break;
+        default:
+            value = node.attr(attribute);
+            break;
         }
-        if (!clazz.equals(Date.class)
-                && !clazz.equals(BigDecimal.class)
+        if (!fieldType.equals(Date.class) && !fieldType.equals(BigDecimal.class)
                 && !format.equals(Selector.NO_VALUE)) {
             Pattern pattern = Pattern.compile(format);
             Matcher matcher = pattern.matcher(value);
@@ -181,27 +160,47 @@ abstract class HtmlField<T> {
         return value;
     }
 
-    private DateFormat getDateFormat() {
-        if (Selector.NO_VALUE.equals(format)) {
-            return DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
-        } else {
-            return new SimpleDateFormat(format, locale);
+    private Date getDate(String value) {
+        try {
+            if (Selector.NO_VALUE.equals(format)) {
+                return DateFormat.getDateInstance(DateFormat.DEFAULT, locale).parse(value);
+            }
+            return new SimpleDateFormat(format, locale).parse(value);
+        }
+        catch (ParseException e) {
+            throw new DateParseException(value, format, locale);
         }
     }
 
-    private DecimalFormat getDecimalFormat() {
-        DecimalFormat instance;
-        if (Selector.NO_VALUE.equals(format)) {
-            instance = (DecimalFormat) DecimalFormat.getInstance(locale);
-        } else {
-            instance = new DecimalFormat(format);
+    private BigDecimal getBigDecimal(String value) {
+        try {
+            DecimalFormat decimalFormat = Selector.NO_VALUE.equals(format)
+                    ? (DecimalFormat) DecimalFormat.getInstance(locale) : new DecimalFormat(format);
+
+            decimalFormat.setParseBigDecimal(true);
+            return (BigDecimal) decimalFormat.parse(value);
         }
-        instance.setParseBigDecimal(true);
-        return instance;
+        catch (ParseException e) {
+            throw new BigDecimalParseException(value, format, locale);
+        }
+
     }
 
-    private Number getNumberFromString(String value) throws ParseException {
-        NumberFormat numberFormat = NumberFormat.getInstance(locale);
-        return numberFormat.parse(value);
+    private Double getDouble(String value) {
+        try {
+            return NumberFormat.getInstance(locale).parse(value).doubleValue();
+        }
+        catch (ParseException e) {
+            throw new DateParseException(value, format, locale);
+        }
+    }
+
+    private Float getFloat(String value) {
+        try {
+            return Float.valueOf(NumberFormat.getInstance(locale).parse(value).floatValue());
+        }
+        catch (ParseException e) {
+            throw new FloatParseException(value, locale);
+        }
     }
 }
