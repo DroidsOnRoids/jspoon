@@ -65,6 +65,9 @@ abstract class HtmlField<T> {
     }
 
     static void setFieldOrThrow(Field field, Object newInstance, Object value) {
+        if (value == null || Selector.NO_VALUE.equals(value)){
+            return;
+        }
         try {
             field.setAccessible(true);
             field.set(newInstance, value);
@@ -116,7 +119,9 @@ abstract class HtmlField<T> {
             return fieldType.cast(getBigDecimal(value));
         }
 
-        return fieldType.cast(value);
+        // unsupported field type
+        // or String field but selected Element does not exist and no set defValue
+        return null;
     }
 
     private <U> String getValue(Element node, Class<U> fieldType) {
