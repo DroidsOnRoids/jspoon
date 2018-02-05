@@ -2,7 +2,6 @@ package pl.droidsonroids.jspoon;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -11,12 +10,12 @@ import java.nio.charset.Charset;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
+
 import pl.droidsonroids.jspoon.annotation.Selector;
-import pl.droidsonroids.jspoon.exception.ConstructorNotFoundException;
 import pl.droidsonroids.jspoon.exception.EmptySelectorException;
-import pl.droidsonroids.jspoon.exception.ObjectCreationException;
 
 /**
  * Converts HTML strings to Java.
@@ -135,26 +134,9 @@ public class HtmlAdapter<T> {
     }
 
     T loadFromNode(Element node) {
-        T newInstance = createNewInstance();
+        T newInstance = Utils.constructInstance(clazz);
         for (HtmlField<T> htmlField : htmlFieldCache.values()) {
             htmlField.setValue(jspoon, node, newInstance);
-        }
-        return newInstance;
-    }
-
-    private T createNewInstance() {
-        T newInstance;
-        Constructor<T> constructor;
-        try {
-            constructor = clazz.getDeclaredConstructor();
-        } catch (NoSuchMethodException e) {
-            throw new ConstructorNotFoundException(clazz.getSimpleName());
-        }
-        constructor.setAccessible(true);
-        try {
-            newInstance = constructor.newInstance();
-        } catch (Exception e) {
-            throw new ObjectCreationException(clazz.getSimpleName());
         }
         return newInstance;
     }
