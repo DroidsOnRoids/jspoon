@@ -19,7 +19,7 @@ dependencies {
 
     implementation project(":jspoon")
     implementation project(":retrofit-converter-jspoon")
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$versions.rxjava"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit"
 
     testImplementation "junit:junit:$versions.junit"
 }
