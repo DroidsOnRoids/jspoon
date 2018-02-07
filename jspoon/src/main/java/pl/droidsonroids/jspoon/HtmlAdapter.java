@@ -3,6 +3,7 @@ package pl.droidsonroids.jspoon;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.URL;
@@ -30,8 +31,12 @@ public class HtmlAdapter<T> {
         this.clazz = clazz;
         htmlFieldCache = new LinkedHashMap<>();
 
-        Field[] declaredFields = clazz.getDeclaredFields();
-        for (Field field : declaredFields) {
+        for (Field field : Utils.getAllDeclaredFields(clazz)) {
+
+            if (field.isSynthetic() || Modifier.isFinal(field.getModifiers())){
+                continue;
+            }
+
             Class<?> fieldClass = field.getType();
 
             // Annotated field
