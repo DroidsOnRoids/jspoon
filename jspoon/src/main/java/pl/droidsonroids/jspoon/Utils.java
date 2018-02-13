@@ -4,10 +4,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,14 +18,6 @@ public class Utils {
 
     /** Map of class representing primitives and their object counterparts. */
     private final static Map<Class<?>, Class<?>> PRIMITIVE_WRAPPERS = new HashMap<Class<?>, Class<?>>();
-
-    /** Map used for caching class' declared fields. */
-    private static final Map<Class<?>, Field[]> DECLARED_FIELDS_CACHE =
-            Collections.synchronizedMap(new LRUCache<Class<?>, Field[]>(30));
-
-    /** Map used for caching class' declared constructors. */
-    private static final  Map<Class<?>, Constructor<?>> DECLARED_CONSTRUCTOR_CACHE =
-            Collections.synchronizedMap(new LRUCache<Class<?>, Constructor<?>>(30));
 
     static {
         PRIMITIVE_WRAPPERS.put(boolean.class, Boolean.class);
@@ -58,7 +48,7 @@ public class Utils {
 
     public static <T> T constructInstance(Class<T> clazz) {
         try {
-            Constructor<T> constructor = getDeclaredConstructor(clazz);
+            Constructor<T> constructor = clazz.getDeclaredConstructor();
             constructor.setAccessible(true);
             return constructor.newInstance();
         } catch (NoSuchMethodException e) {
@@ -79,44 +69,10 @@ public class Utils {
             return declaredFields;
         }
         declaredFields = getAllDeclaredFields(target.getSuperclass());
-        for (Field field : getDeclaredFields(target)){
+        for (Field field : target.getDeclaredFields()){
             declaredFields.add(field);
         }
         return declaredFields;
-    }
-
-    /**
-     * The same as calling {@link Class#getDeclaredConstructor(Class...)} on the target class but the
-     * returned constructor is cached to improve reflection performance.
-     *
-     * @param target the target class
-     * @param paramTypes constructor parameter types
-     * @return the declared constructor
-     * @throws NoSuchMethodException if thrown while calling {@link Class#getDeclaredConstructor(Class...)}
-     * @throws SecurityException if thrown while calling {@link Class#getDeclaredConstructor(Class...)}
-     */
-    public static <T> Constructor<T> getDeclaredConstructor(Class<T> target, Class<?>...paramTypes) throws NoSuchMethodException, SecurityException {
-        if (!DECLARED_CONSTRUCTOR_CACHE.containsKey(target)){
-            Constructor<T> c = target.getDeclaredConstructor(paramTypes);
-            DECLARED_CONSTRUCTOR_CACHE.put(target, c);
-        }
-        @SuppressWarnings("unchecked")
-        Constructor<T> decConstructor = (Constructor<T>) DECLARED_CONSTRUCTOR_CACHE.get(target);
-        return decConstructor;
-    }
-
-    /**
-     * The same as calling {@link Class#getDeclaredFields()} on the target class but the
-     * returned Field[] is cached to improve reflection performance.
-     *
-     * @param target the target class
-     * @return the declared Field[]
-     */
-    public static Field[] getDeclaredFields(Class<?> target) {
-        if (!DECLARED_FIELDS_CACHE.containsKey(target)){
-            DECLARED_FIELDS_CACHE.put(target, target.getDeclaredFields());
-        }
-        return DECLARED_FIELDS_CACHE.get(target);
     }
 
     static boolean isSimple(Class<?> clazz) {
@@ -127,23 +83,5 @@ public class Utils {
                 || clazz.equals(boolean.class) || clazz.equals(BigDecimal.class)
                 || clazz.equals(Element.class) || clazz.equals(List.class)
                 || clazz.equals(Date.class) || clazz.equals(Element.class);
-    }
-
-    public static class LRUCache<K, V> extends LinkedHashMap<K, V> {
-        private static final long serialVersionUID = 1390803079051266956L;
-        private final int size;
-
-        public LRUCache(final int maxEntries) {
-            super(maxEntries + 1, 0.75f, true);
-            this.size = maxEntries;
-        }
-
-        /**
-         * @see java.util.LinkedHashMap#removeEldestEntry(Map.Entry)
-         */
-        @Override
-        protected boolean removeEldestEntry(final Map.Entry<K, V> oldest) {
-            return super.size() > size;
-        }
     }
 }
