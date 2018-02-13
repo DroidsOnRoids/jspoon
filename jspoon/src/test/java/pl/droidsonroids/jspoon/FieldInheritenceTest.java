@@ -58,4 +58,24 @@ public class FieldInheritenceTest {
         assertEquals(1, model.booleanList.size());
         assertNull(((ParentModel)model).booleanList);
     }
+
+    @SuppressWarnings("static-access")
+    @Test
+    public void testDowncastingInstanceFields(){
+        HtmlAdapter<ParentModel> htmlAdapter = jspoon.adapter(ParentModel.class);
+        ChildModel subclass = new ChildModel();
+        ChildModel model = (ChildModel) htmlAdapter.fromHtml(HTML_CONTENT, subclass);
+
+        assertEquals("PARENT", model.PARENT_CONSTANT);
+        assertEquals("CHILD", model.CHILD_CONSTANT);
+
+        // fields populated depend on adapter's T, so only inherited fields from
+        // ParentModel are populated
+        assertNull(model.childNumber);
+        assertEquals(new BigDecimal("32000"), model.baseNumber);
+
+        // a type of 'inverse override' when un'hidden
+        assertNull(model.booleanList);
+        assertEquals(3, ((ParentModel)model).booleanList.size());
+    }
 }

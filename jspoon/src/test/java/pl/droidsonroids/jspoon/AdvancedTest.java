@@ -1,18 +1,20 @@
 package pl.droidsonroids.jspoon;
 
+import static org.junit.Assert.assertEquals;
+
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
 import pl.droidsonroids.jspoon.annotation.Selector;
 import pl.droidsonroids.jspoon.rule.CustomLocaleRule;
-
-import static org.junit.Assert.assertEquals;
 
 public class AdvancedTest {
     private final static String HTML_CONTENT = "<div>"
@@ -170,6 +172,7 @@ public class AdvancedTest {
         @Selector("p") String content;
         @Selector("li") ArrayList<String> tags;
 
+        @SuppressWarnings("unused")
         AnnotatedPost() {
             //no-op
         }

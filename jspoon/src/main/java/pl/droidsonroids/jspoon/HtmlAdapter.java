@@ -63,6 +63,18 @@ public class HtmlAdapter<T> {
     }
 
     /**
+     * Populates given {@code T} instance from html string.
+     *
+     * @param htmlContent String with HTML content
+     * @param instance instance to populate
+     * @return Created object
+     */
+    public T fromHtml(String htmlContent, T instance) {
+        Element pageRoot = Jsoup.parse(htmlContent);
+        return loadFromNode(pageRoot, instance);
+    }
+
+    /**
      * Converts html string to {@code T} object.
      *
      * @param htmlContent String with HTML content
@@ -70,7 +82,7 @@ public class HtmlAdapter<T> {
      */
     public T fromHtml(String htmlContent) {
         Element pageRoot = Jsoup.parse(htmlContent);
-        return loadFromNode(pageRoot);
+        return loadFromNode(pageRoot, null);
     }
 
     /**
@@ -101,6 +113,25 @@ public class HtmlAdapter<T> {
     }
 
     /**
+     * Populates {@code T} instance from the provided {@code inputStream}.
+     * <p>
+     * Does not close the {@code InputStream}.
+     *
+     * @param inputStream InputStream with HTML content
+     * @param charset Charset to use
+     * @param baseUrl The URL where the HTML was retrieved from, to resolve relative links against.
+     * @param instance instance to populate
+     * @return Created object of type {@code T}
+     * @throws IOException If I/O error occurs while reading the {@code InputStream}
+     */
+    public T fromInputStream(InputStream inputStream, Charset charset, URL baseUrl, T instance) throws IOException {
+        String urlToUse = baseUrl != null ? baseUrl.toString() : null;
+        String charsetToUse = charset != null ? charset.name() : null;
+        Element root = Jsoup.parse(inputStream, charsetToUse, urlToUse);
+        return loadFromNode(root, null);
+    }
+
+    /**
      * Converts the provided {@code inputStream} to a {@code T} object.
      * <p>
      * Does not close the {@code InputStream}.
@@ -115,7 +146,7 @@ public class HtmlAdapter<T> {
         String urlToUse = baseUrl != null ? baseUrl.toString() : null;
         String charsetToUse = charset != null ? charset.name() : null;
         Element root = Jsoup.parse(inputStream, charsetToUse, urlToUse);
-        return loadFromNode(root);
+        return loadFromNode(root, null);
     }
 
     private Selector getSelectorFromListType(Field field) {
@@ -139,10 +170,16 @@ public class HtmlAdapter<T> {
     }
 
     T loadFromNode(Element node) {
-        T newInstance = Utils.constructInstance(clazz);
-        for (HtmlField<T> htmlField : htmlFieldCache.values()) {
-            htmlField.setValue(jspoon, node, newInstance);
+        return loadFromNode(node, null);
+    }
+
+    T loadFromNode(Element node, T instance) {
+        if (instance == null){
+            instance = Utils.constructInstance(clazz);
         }
-        return newInstance;
+        for (HtmlField<T> htmlField : htmlFieldCache.values()) {
+            htmlField.setValue(jspoon, node, instance);
+        }
+        return instance;
     }
 }
