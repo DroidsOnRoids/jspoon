@@ -14,7 +14,7 @@ import org.jsoup.nodes.Element;
 import pl.droidsonroids.jspoon.exception.ConstructorNotFoundException;
 import pl.droidsonroids.jspoon.exception.ObjectCreationException;
 
-public class Utils {
+class Utils {
 
     /** Map of class representing primitives and their object counterparts. */
     private final static Map<Class<?>, Class<?>> PRIMITIVE_WRAPPERS = new HashMap<Class<?>, Class<?>>();
@@ -36,7 +36,7 @@ public class Utils {
      * @param clazz
      * @return object class from a possible primitive
      */
-    public static <T> Class<T> wrapToObject(Class<T> clazz){
+    public static <T> Class<T> wrapToObject(Class<T> clazz) {
         if (!clazz.isPrimitive()) {
             return clazz;
         }
@@ -65,11 +65,11 @@ public class Utils {
      */
     public static List<Field> getAllDeclaredFields(Class<?> target) {
         List<Field> declaredFields = new ArrayList<>();
-        if (target.getSuperclass() == null || target == Object.class || target.isInterface()){
+        if (target.getSuperclass() == null || target == Object.class || target.isInterface()) {
             return declaredFields;
         }
         declaredFields = getAllDeclaredFields(target.getSuperclass());
-        for (Field field : target.getDeclaredFields()){
+        for (Field field : target.getDeclaredFields()) {
             declaredFields.add(field);
         }
         return declaredFields;

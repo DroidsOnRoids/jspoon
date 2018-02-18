@@ -33,7 +33,7 @@ public class HtmlAdapter<T> {
 
         for (Field field : Utils.getAllDeclaredFields(clazz)) {
 
-            if (field.isSynthetic() || Modifier.isFinal(field.getModifiers())){
+            if (field.isSynthetic() || Modifier.isFinal(field.getModifiers())) {
                 continue;
             }
 
@@ -174,7 +174,7 @@ public class HtmlAdapter<T> {
     }
 
     T loadFromNode(Element node, T instance) {
-        if (instance == null){
+        if (instance == null) {
             instance = Utils.constructInstance(clazz);
         }
         for (HtmlField<T> htmlField : htmlFieldCache.values()) {

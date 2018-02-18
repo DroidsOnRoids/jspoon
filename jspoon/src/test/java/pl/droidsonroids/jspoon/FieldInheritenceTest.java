@@ -45,7 +45,7 @@ public class FieldInheritenceTest {
 
     @SuppressWarnings("static-access")
     @Test
-    public void testInheritedFields(){
+    public void testInheritedFields() {
         HtmlAdapter<ChildModel> htmlAdapter = jspoon.adapter(ChildModel.class);
         ChildModel model = htmlAdapter.fromHtml(HTML_CONTENT);
 
@@ -61,7 +61,7 @@ public class FieldInheritenceTest {
 
     @SuppressWarnings("static-access")
     @Test
-    public void testDowncastingInstanceFields(){
+    public void testDowncastingInstanceFields() {
         HtmlAdapter<ParentModel> htmlAdapter = jspoon.adapter(ParentModel.class);
         ChildModel subclass = new ChildModel();
         ChildModel model = (ChildModel) htmlAdapter.fromHtml(HTML_CONTENT, subclass);
