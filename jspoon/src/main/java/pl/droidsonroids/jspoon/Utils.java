@@ -1,7 +1,9 @@
 package pl.droidsonroids.jspoon;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +16,8 @@ import pl.droidsonroids.jspoon.exception.ObjectCreationException;
 
 class Utils {
 
-    public final static Map<Class<?>, Class<?>> PRIMITIVE_WRAPPERS = new HashMap<Class<?>, Class<?>>();
+    /** Map of class representing primitives and their object counterparts. */
+    private final static Map<Class<?>, Class<?>> PRIMITIVE_WRAPPERS = new HashMap<Class<?>, Class<?>>();
 
     static {
         PRIMITIVE_WRAPPERS.put(boolean.class, Boolean.class);
@@ -27,7 +30,13 @@ class Utils {
         PRIMITIVE_WRAPPERS.put(double.class, Double.class);
     }
 
-    public static <T> Class<T> wrapToObject(Class<T> clazz){
+    /**
+     * If the given class is a primitive will return its Object class representation, otherwise
+     * returns the same given class.
+     * @param clazz
+     * @return object class from a possible primitive
+     */
+    public static <T> Class<T> wrapToObject(Class<T> clazz) {
         if (!clazz.isPrimitive()) {
             return clazz;
         }
@@ -47,6 +56,23 @@ class Utils {
         } catch (Exception e) {
             throw new ObjectCreationException(clazz.getSimpleName());
         }
+    }
+
+    /**
+     * Returns a list of all fields, including inherited, starting from the upper most superclass.
+     * @param target the target subclass
+     * @return all declared fields
+     */
+    public static List<Field> getAllDeclaredFields(Class<?> target) {
+        List<Field> declaredFields = new ArrayList<>();
+        if (target.getSuperclass() == null || target == Object.class || target.isInterface()) {
+            return declaredFields;
+        }
+        declaredFields = getAllDeclaredFields(target.getSuperclass());
+        for (Field field : target.getDeclaredFields()) {
+            declaredFields.add(field);
+        }
+        return declaredFields;
     }
 
     static boolean isSimple(Class<?> clazz) {

@@ -5,8 +5,10 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
 import pl.droidsonroids.jspoon.annotation.Selector;
 
 class HtmlListField<T> extends HtmlField<T> {
