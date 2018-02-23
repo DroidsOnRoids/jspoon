@@ -16,6 +16,7 @@ import org.jsoup.select.Elements;
 import pl.droidsonroids.jspoon.annotation.Selector;
 import pl.droidsonroids.jspoon.exception.BigDecimalParseException;
 import pl.droidsonroids.jspoon.exception.DateParseException;
+import pl.droidsonroids.jspoon.exception.DoubleParseException;
 import pl.droidsonroids.jspoon.exception.FieldSetException;
 import pl.droidsonroids.jspoon.exception.FloatParseException;
 
@@ -82,20 +83,29 @@ abstract class HtmlField<T> {
             return fieldType.cast(Boolean.valueOf(value));
         }
 
-        if (fieldType.equals(Date.class)) {
-            return fieldType.cast(getDate(value));
-        }
+        try {
 
-        if (fieldType.equals(Float.class)) {
-            return fieldType.cast(getFloat(value));
-        }
+            if (fieldType.equals(Date.class)) {
+                return fieldType.cast(getDate(value));
+            }
 
-        if (fieldType.equals(Double.class)) {
-            return fieldType.cast(getDouble(value));
-        }
+            if (fieldType.equals(Float.class)) {
+                return fieldType.cast(getFloat(value));
+            }
 
-        if (fieldType.equals(BigDecimal.class)) {
-            return fieldType.cast(getBigDecimal(value));
+            if (fieldType.equals(Double.class)) {
+                return fieldType.cast(getDouble(value));
+            }
+
+            if (fieldType.equals(BigDecimal.class)) {
+                return fieldType.cast(getBigDecimal(value));
+            }
+
+        } catch (DateParseException | FloatParseException | DoubleParseException | BigDecimalParseException e) {
+            if (spec.isNullable()) {
+                return null;
+            }
+            throw e;
         }
 
         // unsupported field type
@@ -170,7 +180,7 @@ abstract class HtmlField<T> {
             return NumberFormat.getInstance(spec.getLocale()).parse(value).doubleValue();
         }
         catch (ParseException e) {
-            throw new DateParseException(value, spec.getFormat(), spec.getLocale());
+            throw new DoubleParseException(value, spec.getLocale());
         }
     }
 
