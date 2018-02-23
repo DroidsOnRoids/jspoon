@@ -1,28 +1,24 @@
 package pl.droidsonroids.jspoon;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import pl.droidsonroids.jspoon.annotation.Selector;
-
 class HtmlListField<T> extends HtmlField<T> {
-    HtmlListField(Field field, Selector selector) {
-        super(field, selector);
+    HtmlListField(FieldType field, SelectorSpec spec) {
+        super(field, spec);
     }
 
     @Override
     public void setValue(Jspoon jspoon, Element node, T newInstance) {
         Elements nodes = selectChildren(node);
 
-        Type genericType = field.getGenericType();
-        Type type = ((ParameterizedType) genericType).getActualTypeArguments()[0];
-        Class<?> listClass = (Class<?>) type;
+        Class<?> listClass = field.getTypeArgumentCount() == 1 ?
+                field.getTypeArgument(0) : Object.class;
+        // Raw or <any> collections treated as Collection<String>
+        listClass = (listClass == Object.class) ? String.class : listClass;
 
         setFieldOrThrow(field, newInstance, populateList(jspoon, nodes, listClass));
     }

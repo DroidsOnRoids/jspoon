@@ -3,9 +3,6 @@ package pl.droidsonroids.jspoon;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.LinkedHashMap;
@@ -31,29 +28,31 @@ public class HtmlAdapter<T> {
         this.clazz = clazz;
         htmlFieldCache = new LinkedHashMap<>();
 
-        for (Field field : Utils.getAllDeclaredFields(clazz)) {
+        for (Field f : Utils.getAllDeclaredFields(clazz)) {
 
-            if (field.isSynthetic() || Modifier.isFinal(field.getModifiers())) {
+            FieldType field = new FieldType(clazz, f);
+
+            if (!field.isModifiable()) {
                 continue;
             }
-
-            Class<?> fieldClass = field.getType();
 
             // Annotated field
             Selector selector = field.getAnnotation(Selector.class);
 
             // Not annotated field of annotated class
             if (selector == null) {
-                selector = fieldClass.getAnnotation(Selector.class);
+                selector = field.getType().getAnnotation(Selector.class);
             }
 
             // Not annotated field - List of annotated type
-            if (selector == null && List.class.isAssignableFrom(fieldClass)) {
-                selector = getSelectorFromListType(field);
+            if (selector == null && field.isAssignableTo(List.class)) {
+                if (field.getTypeArgumentCount() == 1) {
+                    selector = field.getTypeArgument(0).getAnnotation(Selector.class);
+                }
             }
 
             if (selector != null) {
-                addCachedHtmlField(field, selector, fieldClass);
+                addCachedHtmlField(field, selector);
             }
         }
 
@@ -149,22 +148,17 @@ public class HtmlAdapter<T> {
         return loadFromNode(root, null);
     }
 
-    private Selector getSelectorFromListType(Field field) {
-        Type genericType = field.getGenericType();
-        Class<?> listClass = (Class<?>) ((ParameterizedType) genericType).getActualTypeArguments()[0];
-        return listClass.getAnnotation(Selector.class);
-    }
-
-    private void addCachedHtmlField(Field field, Selector selector, Class<?> fieldClass) {
+    private void addCachedHtmlField(FieldType field, Selector selector) {
+        SelectorSpec spec = new SelectorSpec(selector, field);
         HtmlField<T> htmlField;
-        if (!selector.converter().equals(ElementConverter.class)) {
-            htmlField = new HtmlFieldWithConverter<>(field, selector);
-        } else if (List.class.isAssignableFrom(fieldClass)) {
-            htmlField = new HtmlListField<>(field, selector);
-        } else if (Utils.isSimple(fieldClass)) {
-            htmlField = new HtmlSimpleField<>(field, selector);
+        if (spec.getConverter() != null) {
+            htmlField = new HtmlFieldWithConverter<>(field, spec);
+        } else if (field.isAssignableTo(List.class)) {
+            htmlField = new HtmlListField<>(field, spec);
+        } else if (Utils.isSimple(field.getType())) {
+            htmlField = new HtmlSimpleField<>(field, spec);
         } else {
-            htmlField = new HtmlClassField<>(field, selector);
+            htmlField = new HtmlClassField<>(field, spec);
         }
         htmlFieldCache.put(field.getName(), htmlField);
     }

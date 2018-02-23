@@ -1,12 +1,10 @@
 package pl.droidsonroids.jspoon;
 
-import java.lang.reflect.Field;
 import org.jsoup.nodes.Element;
-import pl.droidsonroids.jspoon.annotation.Selector;
 
 class HtmlSimpleField<T> extends HtmlField<T> {
-    HtmlSimpleField(Field field, Selector selector) {
-        super(field, selector);
+    HtmlSimpleField(FieldType field, SelectorSpec spec) {
+        super(field, spec);
     }
 
     @Override

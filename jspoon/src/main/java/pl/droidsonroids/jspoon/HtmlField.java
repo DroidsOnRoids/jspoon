@@ -1,6 +1,5 @@
 package pl.droidsonroids.jspoon;
 
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -8,7 +7,6 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,53 +21,34 @@ import pl.droidsonroids.jspoon.exception.FloatParseException;
 
 abstract class HtmlField<T> {
 
-    protected Field field;
-    private String cssQuery;
-    private String attribute;
-    private String format;
-    private Locale locale;
-    private String defValue;
-    private int index;
+    protected final FieldType field;
+    protected final SelectorSpec spec;
 
-    HtmlField(Field field, Selector selector) {
+    HtmlField(FieldType field, SelectorSpec spec) {
         this.field = field;
-        cssQuery = selector.value();
-        attribute = selector.attr();
-        format = selector.format();
-        setLocaleFromTag(selector.locale());
-        defValue = selector.defValue();
-        index = selector.index();
-    }
-
-    private void setLocaleFromTag(String localeTag) {
-        if (localeTag.equals(Selector.NO_VALUE)) {
-            locale = Locale.getDefault();
-        } else {
-            locale = Locale.forLanguageTag(localeTag);
-        }
+        this.spec = spec;
     }
 
     protected abstract void setValue(Jspoon jspoon, Element node, T newInstance);
 
     protected Elements selectChildren(Element node) {
-        return node.select(cssQuery);
+        return node.select(spec.getCssQuery());
     }
 
     protected Element selectChild(Element parent) {
         Elements elements = selectChildren(parent);
         int size = elements.size();
-        if (size == 0 || size <= index) {
+        if (size == 0 || size <= spec.getIndex()) {
             return null;
         }
-        return elements.get(index);
+        return elements.get(spec.getIndex());
     }
 
-    static void setFieldOrThrow(Field field, Object newInstance, Object value) {
+    static void setFieldOrThrow(FieldType field, Object newInstance, Object value) {
         if (value == null || Selector.NO_VALUE.equals(value)){
             return;
         }
         try {
-            field.setAccessible(true);
             field.set(newInstance, value);
         }
         catch (IllegalAccessException e) {
@@ -87,7 +66,7 @@ abstract class HtmlField<T> {
 
         String value = getValue(node, fieldType);
 
-        if (fieldType.equals(String.class)) {
+        if (fieldType.isAssignableFrom(String.class)) {
             return fieldType.cast(value);
         }
 
@@ -126,10 +105,10 @@ abstract class HtmlField<T> {
 
     private <U> String getValue(Element node, Class<U> fieldType) {
         if (node == null) {
-            return defValue;
+            return spec.getDefaultValue();
         }
         String value;
-        switch (attribute) {
+        switch (spec.getAttribute()) {
         case "":
         case "text":
             value = node.text();
@@ -142,18 +121,17 @@ abstract class HtmlField<T> {
             value = node.outerHtml();
             break;
         default:
-            value = node.attr(attribute);
+            value = node.attr(spec.getAttribute());
             break;
         }
-        if (!fieldType.equals(Date.class) && !fieldType.equals(BigDecimal.class)
-                && !format.equals(Selector.NO_VALUE)) {
-            Pattern pattern = Pattern.compile(format);
+        if (spec.getRegex() != null) {
+            Pattern pattern = Pattern.compile(spec.getRegex());
             Matcher matcher = pattern.matcher(value);
             boolean found = matcher.find();
             if (found) {
                 value = matcher.group(1);
                 if (value.isEmpty()) {
-                    value = defValue;
+                    value = spec.getDefaultValue();
                 }
             }
         }
@@ -162,45 +140,46 @@ abstract class HtmlField<T> {
 
     private Date getDate(String value) {
         try {
-            if (Selector.NO_VALUE.equals(format)) {
-                return DateFormat.getDateInstance(DateFormat.DEFAULT, locale).parse(value);
+            if (spec.getFormat() == null) {
+                return DateFormat.getDateInstance(DateFormat.DEFAULT, spec.getLocale()).parse(value);
             }
-            return new SimpleDateFormat(format, locale).parse(value);
+            return new SimpleDateFormat(spec.getFormat(), spec.getLocale()).parse(value);
         }
         catch (ParseException e) {
-            throw new DateParseException(value, format, locale);
+            throw new DateParseException(value, spec.getFormat(), spec.getLocale());
         }
     }
 
     private BigDecimal getBigDecimal(String value) {
         try {
-            DecimalFormat decimalFormat = Selector.NO_VALUE.equals(format)
-                    ? (DecimalFormat) DecimalFormat.getInstance(locale) : new DecimalFormat(format);
+            DecimalFormat decimalFormat = (spec.getFormat() == null)
+                    ? (DecimalFormat) DecimalFormat.getInstance(spec.getLocale())
+                            : new DecimalFormat(spec.getFormat());
 
             decimalFormat.setParseBigDecimal(true);
             return (BigDecimal) decimalFormat.parse(value);
         }
         catch (ParseException e) {
-            throw new BigDecimalParseException(value, format, locale);
+            throw new BigDecimalParseException(value, spec.getFormat(), spec.getLocale());
         }
 
     }
 
     private Double getDouble(String value) {
         try {
-            return NumberFormat.getInstance(locale).parse(value).doubleValue();
+            return NumberFormat.getInstance(spec.getLocale()).parse(value).doubleValue();
         }
         catch (ParseException e) {
-            throw new DateParseException(value, format, locale);
+            throw new DateParseException(value, spec.getFormat(), spec.getLocale());
         }
     }
 
     private Float getFloat(String value) {
         try {
-            return Float.valueOf(NumberFormat.getInstance(locale).parse(value).floatValue());
+            return Float.valueOf(NumberFormat.getInstance(spec.getLocale()).parse(value).floatValue());
         }
         catch (ParseException e) {
-            throw new FloatParseException(value, locale);
+            throw new FloatParseException(value, spec.getLocale());
         }
     }
 }
