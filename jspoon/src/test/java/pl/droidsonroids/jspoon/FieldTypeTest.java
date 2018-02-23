@@ -9,8 +9,10 @@ import static org.junit.Assert.assertTrue;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -132,10 +134,10 @@ public class FieldTypeTest {
     static class ModelGeneric<T> {
         @SuppressWarnings("rawtypes")
         @Selector("div > div") List justList;
-        @Selector("span") List<?> listAny;
-        @Selector(".float") List<? extends T> listExtType;
-        @Selector(".negative") List<? super T> listSupType;
-        @Selector(".positive") List<T> listType;
+        @Selector("span") Collection<?> listAny;
+        @Selector(".float") Set<? extends T> listExtType;
+        @Selector(".negative") LinkedHashSet<? super T> listSupType;
+        @Selector(".positive") LinkedList<T> listType;
     }
 
     static class ModelString extends ModelGeneric<String> {

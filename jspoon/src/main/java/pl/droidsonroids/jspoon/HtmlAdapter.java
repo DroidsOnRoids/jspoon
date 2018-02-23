@@ -5,8 +5,8 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.jsoup.Jsoup;
@@ -45,10 +45,8 @@ public class HtmlAdapter<T> {
             }
 
             // Not annotated field - List of annotated type
-            if (selector == null && field.isAssignableTo(List.class)) {
-                if (field.getTypeArgumentCount() == 1) {
-                    selector = field.getTypeArgument(0).getAnnotation(Selector.class);
-                }
+            if (selector == null && isCollectionLike(field)) {
+                selector = getFromComponentType(field);
             }
 
             if (selector != null) {
@@ -59,6 +57,16 @@ public class HtmlAdapter<T> {
         if (htmlFieldCache.isEmpty()) {
             throw new EmptySelectorException(clazz);
         }
+    }
+
+    private Selector getFromComponentType(FieldType field) {
+        if (field.isArray()) {
+            return field.getArrayContentType().getAnnotation(Selector.class);
+        }
+        if (field.getTypeArgumentCount() == 1) {
+            return field.getTypeArgument(0).getAnnotation(Selector.class);
+        }
+        return null;
     }
 
     /**
@@ -153,14 +161,18 @@ public class HtmlAdapter<T> {
         HtmlField<T> htmlField;
         if (spec.getConverter() != null) {
             htmlField = new HtmlFieldWithConverter<>(field, spec);
-        } else if (field.isAssignableTo(List.class)) {
-            htmlField = new HtmlListField<>(field, spec);
+        } else if (isCollectionLike(field)) {
+            htmlField = new HtmlCollectionLikeField<>(field, spec);
         } else if (Utils.isSimple(field.getType())) {
             htmlField = new HtmlSimpleField<>(field, spec);
         } else {
             htmlField = new HtmlClassField<>(field, spec);
         }
         htmlFieldCache.put(field.getName(), htmlField);
+    }
+
+    private boolean isCollectionLike(FieldType field) {
+        return field.isArray() || field.isAssignableTo(Collection.class);
     }
 
     T loadFromNode(Element node) {

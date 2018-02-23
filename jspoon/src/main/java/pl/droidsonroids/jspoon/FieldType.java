@@ -234,6 +234,14 @@ public class FieldType {
         return !Modifier.isAbstract(this.wrapped.getModifiers()) && !typeClass.isInterface();
     }
 
+    public boolean isArray() {
+        return isArray;
+    }
+
+    public Class<?> getArrayContentType(){
+        return this.arrayContentType;
+    }
+
     public int getTypeArgumentCount() {
         return hasTypeArguments ? typeArguments.length : 0;
     }
