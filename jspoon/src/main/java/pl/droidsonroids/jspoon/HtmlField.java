@@ -141,7 +141,7 @@ abstract class HtmlField<T> {
             Matcher matcher = pattern.matcher(value);
             if (matcher.find()) {
                 value = (matcher.groupCount() > 0) ? matcher.group(1) : spec.getDefaultValue();
-                if (value.isEmpty()) {
+                if (value == null || value.isEmpty()) {
                     value = spec.getDefaultValue();
                 }
             }
