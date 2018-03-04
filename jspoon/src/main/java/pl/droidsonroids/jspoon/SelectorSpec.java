@@ -40,11 +40,8 @@ public class SelectorSpec {
 
         // @Format annotation takes precedence over deprecated attributes
         Format format = field.getAnnotation(Format.class);
-        if (format != null) {
-            this.format = (format.value().trim().isEmpty() ? null : format.value());
-            this.locale = (format.languageTag().trim().isEmpty() ? Locale.getDefault()
-                    : Locale.forLanguageTag(format.languageTag()));
-
+        if (format != null && !format.value().trim().isEmpty()) {
+            this.format = format.value();
         } else { /* For backwards compatibility */
             if (!NO_VALUE.equals(selector.format())) {
                 if (field.isAssignableTo(Date.class) || field.isAssignableTo(BigDecimal.class)) {
@@ -53,8 +50,14 @@ public class SelectorSpec {
                     this.regex = selector.format();
                 }
             }
-            this.locale = (selector.locale().equals(NO_VALUE) ? Locale.getDefault()
-                    : Locale.forLanguageTag(selector.locale()));
+        }
+
+        if (format != null && !format.languageTag().trim().isEmpty()) {
+            this.locale = Locale.forLanguageTag(format.languageTag());
+        } else if (!NO_VALUE.equals(selector.locale())) { /* For backwards compatibility */
+            this.locale = Locale.forLanguageTag(selector.locale());
+        } else {
+            this.locale = Locale.getDefault();
         }
 
         // New attribute takes precedence if set

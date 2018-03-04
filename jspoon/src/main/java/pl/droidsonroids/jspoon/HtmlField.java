@@ -139,9 +139,8 @@ abstract class HtmlField<T> {
         if (spec.getRegex() != null) {
             Pattern pattern = Pattern.compile(spec.getRegex());
             Matcher matcher = pattern.matcher(value);
-            boolean found = matcher.find();
-            if (found) {
-                value = matcher.group(1);
+            if (matcher.find()) {
+                value = (matcher.groupCount() > 0) ? matcher.group(1) : spec.getDefaultValue();
                 if (value.isEmpty()) {
                     value = spec.getDefaultValue();
                 }
