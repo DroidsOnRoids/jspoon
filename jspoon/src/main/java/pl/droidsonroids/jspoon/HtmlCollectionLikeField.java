@@ -25,7 +25,7 @@ class HtmlCollectionLikeField<T> extends HtmlField<T> {
         } else {
             componentClass = field.getTypeArgumentCount() == 1 ?
                 field.getTypeArgument(0) : Object.class;
-            // Raw or <any> collections treated as Collection<String>
+            // Raw or <?> collections treated as Collection<String>
             componentClass = (componentClass == Object.class) ? String.class : componentClass;
         }
 
@@ -36,31 +36,29 @@ class HtmlCollectionLikeField<T> extends HtmlField<T> {
             return;
         }
 
-        Object[] array = (Object[]) Array.newInstance(componentClass, collection.size());
-        Iterator<?> it = collection.iterator();
-        int index = 0;
-        while (it.hasNext()) {
-            array[index] = it.next();
-            index++;
-        }
-        setFieldOrThrow(field, newInstance, array);
+        Object[] array = createObjectArrayInstance(componentClass, collection);
+        Object valueToSet = componentClass.isPrimitive() ?
+                ArrayUtils.toPrimitive(array, componentClass) : array;
+
+        setFieldOrThrow(field, newInstance, valueToSet);
     }
 
     private <V> Collection<V> populateCollection(Jspoon jspoon, Elements nodes, Class<V> componentClazz) {
         @SuppressWarnings("unchecked")
-        Collection<V> newInstanceList = (field.isArray() ?
+        Collection<V> collectionInstance = (field.isArray() ?
                Utils.constructInstance(ArrayList.class) : createCollectionInstance(field));
+        //componentClazz = componentClazz.isPrimitive() ? Utils.wrapToObject(componentClazz) : componentClazz;
         if (Utils.isSimple(componentClazz)) {
             for (Element node : nodes) {
-                newInstanceList.add(instanceForNode(node, componentClazz));
+                collectionInstance.add(instanceForNode(node, componentClazz));
             }
         } else {
             HtmlAdapter<V> htmlAdapter = jspoon.adapter(componentClazz);
             for (Element node : nodes) {
-                newInstanceList.add(htmlAdapter.loadFromNode(node));
+                collectionInstance.add(htmlAdapter.loadFromNode(node));
             }
         }
-        return newInstanceList;
+        return collectionInstance.isEmpty() ? null : collectionInstance;
     }
 
     private <V> Collection<V> createCollectionInstance(FieldType field) {
@@ -73,5 +71,16 @@ class HtmlCollectionLikeField<T> extends HtmlField<T> {
             return new LinkedHashSet<>();
         }
         return new ArrayList<>();
+    }
+
+    private Object[] createObjectArrayInstance(Class<?> componentClass, Collection<?> collection) {
+        Object[] array = (Object[]) Array.newInstance(Utils.wrapToObject(componentClass), collection.size());
+        Iterator<?> it = collection.iterator();
+        int index = 0;
+        while (it.hasNext()) {
+            array[index] = it.next();
+            index++;
+        }
+        return array;
     }
 }

@@ -77,6 +77,17 @@ public class FieldTypeTest {
         assertEquals("123", model.item[0]);
     }
 
+    static class PrimitiveArrayModel extends GenericModel<int[]>{
+    }
+
+    @Test
+    public void testGenericPrimitivesArray() throws Exception {
+        HtmlAdapter<PrimitiveArrayModel> htmlAdapter = Jspoon.create().adapter(PrimitiveArrayModel.class);
+        PrimitiveArrayModel model = htmlAdapter.fromHtml(HTML_CONTENT);
+        assertNotNull(model.item);
+        assertEquals(123, model.item[0]);
+    }
+
     static class LinkedListModel {
         @Selector(".number") LinkedList<String> list;
     }
@@ -84,7 +95,6 @@ public class FieldTypeTest {
     @Test
     public void testLinkedList() throws Exception {
         HtmlAdapter<LinkedListModel> htmlAdapter = Jspoon.create().adapter(LinkedListModel.class);
-        // throws IllegalArgumentException - cannot set LinkedList to ArrayList
         LinkedListModel model = htmlAdapter.fromHtml(HTML_CONTENT);
         assertNotNull(model.list);
         assertFalse(model.list.isEmpty());

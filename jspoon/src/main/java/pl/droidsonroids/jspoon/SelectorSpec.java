@@ -1,5 +1,7 @@
 package pl.droidsonroids.jspoon;
 
+import static pl.droidsonroids.jspoon.annotation.Selector.NO_VALUE;
+
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -27,7 +29,7 @@ public class SelectorSpec {
         this.selector = selector;
         this.cssQuery = selector.value();
         this.attribute = selector.attr();
-        this.defaultValue = Selector.NO_VALUE.equals(selector.defValue()) ? null : selector.defValue();
+        this.defaultValue = NO_VALUE.equals(selector.defValue()) ? null : selector.defValue();
         this.index = selector.index();
         this.nullable = (field.getAnnotation(Nullable.class) != null);
 
@@ -36,27 +38,28 @@ public class SelectorSpec {
         this.converter = (!elConverter.isInterface()
                 && !Modifier.isAbstract(elConverter.getModifiers()) ? elConverter : null);
 
-        /* For backwards compatibility */
-        this.locale = (selector.locale().equals(Selector.NO_VALUE) ? Locale.getDefault()
-                : Locale.forLanguageTag(selector.locale()));
-        if (!Selector.NO_VALUE.equals(selector.format())) {
-            if (field.isAssignableTo(Date.class) || field.isAssignableTo(BigDecimal.class)) {
-                this.format = selector.format();
-            } else {
-                this.regex = selector.format();
-            }
-        }
-
-        if (this.regex == null) { // If not set the old way
-            this.regex = (selector.regex().trim().isEmpty() ? null : selector.regex());
-        }
-
         // @Format annotation takes precedence over deprecated attributes
         Format format = field.getAnnotation(Format.class);
         if (format != null) {
             this.format = (format.value().trim().isEmpty() ? null : format.value());
             this.locale = (format.languageTag().trim().isEmpty() ? Locale.getDefault()
                     : Locale.forLanguageTag(format.languageTag()));
+
+        } else { /* For backwards compatibility */
+            if (!NO_VALUE.equals(selector.format())) {
+                if (field.isAssignableTo(Date.class) || field.isAssignableTo(BigDecimal.class)) {
+                    this.format = selector.format();
+                } else {
+                    this.regex = selector.format();
+                }
+            }
+            this.locale = (selector.locale().equals(NO_VALUE) ? Locale.getDefault()
+                    : Locale.forLanguageTag(selector.locale()));
+        }
+
+        // New attribute takes precedence if set
+        if (!selector.regex().trim().isEmpty()) {
+            this.regex = selector.regex();
         }
     }
 

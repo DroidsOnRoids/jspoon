@@ -61,7 +61,6 @@ public class FieldType {
             if (resolvedType instanceof ParameterizedType) {
                 processParametrizedType((ParameterizedType) resolvedType, subType);
             }
-            // TypeVariable extend array
         }
     }
 
@@ -219,7 +218,8 @@ public class FieldType {
         if (superClass == null) {
             return false;
         }
-        return superClass.isAssignableFrom(typeClass);
+        Class<?> fieldClass = superClass.isPrimitive() ? typeClass : Utils.wrapToObject(typeClass);
+        return superClass.isAssignableFrom(fieldClass);
     }
 
     public boolean isFinal() {
@@ -247,11 +247,21 @@ public class FieldType {
     }
 
     public Class<?> getTypeArgument(int index) {
+        if (index < 0 || typeArguments == null || index > typeArguments.length) {
+            throw new IndexOutOfBoundsException(String.format(
+                    "There are %s type argumens, want to retrieve at %s",
+                    (typeArguments == null ? "none" : typeArguments.length), index));
+        }
         return typeArguments[index];
     }
 
     public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
         return this.wrapped.getAnnotation(annotationClass);
+    }
+
+    public void set(Object instance, Object value) throws IllegalArgumentException, IllegalAccessException {
+        this.wrapped.setAccessible(true);
+        this.wrapped.set(instance, value);
     }
 
     @Override
@@ -272,10 +282,5 @@ public class FieldType {
         if (isArray)
             str.append("[]");
         return str.append(">").toString();
-    }
-
-    public void set(Object instance, Object value) throws IllegalArgumentException, IllegalAccessException {
-        this.wrapped.setAccessible(true);
-        this.wrapped.set(instance, value);
     }
 }

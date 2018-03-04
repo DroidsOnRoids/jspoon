@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import pl.droidsonroids.jspoon.annotation.Selector;
 import pl.droidsonroids.jspoon.exception.BigDecimalParseException;
 import pl.droidsonroids.jspoon.exception.DateParseException;
 import pl.droidsonroids.jspoon.exception.DoubleParseException;
@@ -46,7 +45,7 @@ abstract class HtmlField<T> {
     }
 
     static void setFieldOrThrow(FieldType field, Object newInstance, Object value) {
-        if (value == null || Selector.NO_VALUE.equals(value)){
+        if (value == null) {
             return;
         }
         try {
@@ -71,19 +70,19 @@ abstract class HtmlField<T> {
             return fieldType.cast(value);
         }
 
-        if (fieldType.equals(Integer.class)) {
-            return fieldType.cast(Integer.valueOf(value));
-        }
-
-        if (fieldType.equals(Long.class)) {
-            return fieldType.cast(Long.valueOf(value));
-        }
-
         if (fieldType.equals(Boolean.class)) {
             return fieldType.cast(Boolean.valueOf(value));
         }
 
         try {
+
+            if (fieldType.equals(Integer.class)) {
+                return fieldType.cast(Integer.valueOf(value));
+            }
+
+            if (fieldType.equals(Long.class)) {
+                return fieldType.cast(Long.valueOf(value));
+            }
 
             if (fieldType.equals(Date.class)) {
                 return fieldType.cast(getDate(value));
@@ -101,7 +100,10 @@ abstract class HtmlField<T> {
                 return fieldType.cast(getBigDecimal(value));
             }
 
-        } catch (DateParseException | FloatParseException | DoubleParseException | BigDecimalParseException e) {
+        }
+        catch (NumberFormatException | DateParseException | FloatParseException
+                | DoubleParseException | BigDecimalParseException e) {
+
             if (spec.isNullable()) {
                 return null;
             }
