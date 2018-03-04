@@ -47,7 +47,6 @@ class HtmlCollectionLikeField<T> extends HtmlField<T> {
         @SuppressWarnings("unchecked")
         Collection<V> collectionInstance = (field.isArray() ?
                Utils.constructInstance(ArrayList.class) : createCollectionInstance(field));
-        //componentClazz = componentClazz.isPrimitive() ? Utils.wrapToObject(componentClazz) : componentClazz;
         if (Utils.isSimple(componentClazz)) {
             for (Element node : nodes) {
                 collectionInstance.add(instanceForNode(node, componentClazz));
