@@ -189,12 +189,12 @@ public class FieldTypeTest {
         assertListEquals(model.listType, new BigDecimal("123"), new BigDecimal("3366"), new BigDecimal("1314"));
     }
 
-    private static void assertListEquals(Collection<?> actual, Object...expected){
+    private static void assertListEquals(Collection<?> actual, Object...expected) {
         if (expected == null) {
             assertNull(actual);
             return;
         }
-        if (expected.length == 0){
+        if (expected.length == 0) {
             assertTrue(actual != null && actual.isEmpty());
             return;
         }

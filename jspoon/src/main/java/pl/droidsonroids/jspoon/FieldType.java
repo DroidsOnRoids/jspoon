@@ -132,7 +132,7 @@ public class FieldType {
         type = targetType;
         while (type.isMemberClass()) {
             genericType = type.getGenericSuperclass();
-            if (genericType instanceof ParameterizedType){
+            if (genericType instanceof ParameterizedType) {
                 populateTypeArgs((ParameterizedType) genericType, map);
             }
             type = type.getEnclosingClass();
@@ -149,7 +149,7 @@ public class FieldType {
                 ParameterizedType parameterizedType = (ParameterizedType) type;
                 populateTypeArgs(parameterizedType, map);
                 Type rawType = parameterizedType.getRawType();
-                if (rawType instanceof Class){
+                if (rawType instanceof Class) {
                     populateSuperTypeArgs(((Class<?>) rawType).getGenericInterfaces(), map);
                 }
             } else if (type instanceof Class) {
@@ -167,7 +167,7 @@ public class FieldType {
             Type[] typeArguments = type.getActualTypeArguments();
             if (type.getOwnerType() != null) {
                 Type owner = type.getOwnerType();
-                if (owner instanceof ParameterizedType){
+                if (owner instanceof ParameterizedType) {
                     populateTypeArgs((ParameterizedType) owner, map);
                 }
             }
@@ -183,7 +183,7 @@ public class FieldType {
                 } else if (typeArgument instanceof TypeVariable) {
                     TypeVariable<?> typeVariableArgument = (TypeVariable<?>) typeArgument;
                     Type resolvedType = map.get(typeVariableArgument);
-                    if (resolvedType == null){
+                    if (resolvedType == null) {
                         resolvedType = resolveBound(typeVariableArgument);
                     }
                     map.put(variable, resolvedType);
@@ -238,7 +238,7 @@ public class FieldType {
         return isArray;
     }
 
-    public Class<?> getArrayContentType(){
+    public Class<?> getArrayContentType() {
         return this.arrayContentType;
     }
 

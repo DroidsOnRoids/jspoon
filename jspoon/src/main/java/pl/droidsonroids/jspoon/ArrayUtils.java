@@ -52,7 +52,7 @@ class ArrayUtils {
         }
         final char[] result = new char[array.length];
         for (int i = 0; i < array.length; i++) {
-            if (array[i] == null){
+            if (array[i] == null) {
                 result[i] = (new char[1])[0];
                 continue;
             }
@@ -67,7 +67,7 @@ class ArrayUtils {
         }
         final byte[] result = new byte[array.length];
         for (int i = 0; i < array.length; i++) {
-            if (array[i] == null){
+            if (array[i] == null) {
                 result[i] = (new byte[1])[0];
                 continue;
             }
@@ -82,7 +82,7 @@ class ArrayUtils {
         }
         final boolean[] result = new boolean[array.length];
         for (int i = 0; i < array.length; i++) {
-            if (array[i] == null){
+            if (array[i] == null) {
                 result[i] = (new boolean[1])[0];
                 continue;
             }
@@ -97,7 +97,7 @@ class ArrayUtils {
         }
         final float[] result = new float[array.length];
         for (int i = 0; i < array.length; i++) {
-            if (array[i] == null){
+            if (array[i] == null) {
                 result[i] = (new float[1])[0];
                 continue;
             }
@@ -112,7 +112,7 @@ class ArrayUtils {
         }
         final double[] result = new double[array.length];
         for (int i = 0; i < array.length; i++) {
-            if (array[i] == null){
+            if (array[i] == null) {
                 result[i] = (new double[1])[0];
                 continue;
             }
@@ -127,7 +127,7 @@ class ArrayUtils {
         }
         final short[] result = new short[array.length];
         for (int i = 0; i < array.length; i++) {
-            if (array[i] == null){
+            if (array[i] == null) {
                 result[i] = (new short[1])[0];
                 continue;
             }
@@ -142,7 +142,7 @@ class ArrayUtils {
         }
         final long[] result = new long[array.length];
         for (int i = 0; i < array.length; i++) {
-            if (array[i] == null){
+            if (array[i] == null) {
                 result[i] = (new long[1])[0];
                 continue;
             }
@@ -157,7 +157,7 @@ class ArrayUtils {
         }
         final int[] result = new int[array.length];
         for (int i = 0; i < array.length; i++) {
-            if (array[i] == null){
+            if (array[i] == null) {
                 result[i] = (new int[1])[0];
                 continue;
             }
