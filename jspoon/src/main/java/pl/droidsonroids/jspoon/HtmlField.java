@@ -66,15 +66,15 @@ abstract class HtmlField<T> {
 
         String value = getValue(node, fieldType);
 
-        if (fieldType.isAssignableFrom(String.class)) {
-            return fieldType.cast(value);
-        }
-
-        if (fieldType.equals(Boolean.class)) {
-            return fieldType.cast(Boolean.valueOf(value));
-        }
-
         try {
+
+            if (fieldType.isAssignableFrom(String.class)) {
+                return fieldType.cast(value);
+            }
+
+            if (fieldType.equals(Boolean.class)) {
+                return fieldType.cast(Boolean.valueOf(value));
+            }
 
             if (fieldType.equals(Integer.class)) {
                 return fieldType.cast(Integer.valueOf(value));
@@ -100,14 +100,12 @@ abstract class HtmlField<T> {
                 return fieldType.cast(getBigDecimal(value));
             }
 
-        }
-        catch (NumberFormatException | DateParseException | FloatParseException
-                | DoubleParseException | BigDecimalParseException e) {
+        } catch (Throwable t) {
 
-            if (spec.isNullable()) {
+            if (spec.shouldSkipOn(t)) {
                 return null;
             }
-            throw e;
+            throw t;
         }
 
         // unsupported field type

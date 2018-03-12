@@ -12,6 +12,9 @@ import java.lang.reflect.WildcardType;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Wrapper class for a {@link Field} instance that resolves generics meta-data upon creation.
+ */
 public class FieldType {
 
     private final Field wrapped;
@@ -202,18 +205,30 @@ public class FieldType {
         return obj instanceof FieldType && this.wrapped.equals(obj);
     }
 
+    /**
+     * @return wrapped {@link Field} instance
+     */
     Field unwrap() {
         return this.wrapped;
     }
 
+    /**
+     * @return type class of a wrapped field
+     */
     public Class<?> getType() {
         return this.typeClass;
     }
 
+    /**
+     * @return name of a wrapped field
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * @return true if a given class is of wrapped field's type or its subclass, false otherwise
+     */
     public boolean isAssignableTo(Class<?> superClass) {
         if (superClass == null) {
             return false;
@@ -222,30 +237,53 @@ public class FieldType {
         return superClass.isAssignableFrom(fieldClass);
     }
 
+    /**
+     * @return true if a wrapped field is final, false otherwise
+     */
     public boolean isFinal() {
         return Modifier.isFinal(this.wrapped.getModifiers());
     }
 
+    /**
+     * @return true if a wrapped field is not final or synthetic, false otherwise
+     */
     public boolean isModifiable() {
         return !isFinal() && !this.wrapped.isSynthetic();
     }
 
+    /**
+     * @return true if a wrapped field is of a concrete class type (not abstract or interface), false otherwise
+     */
     public boolean isConcrete() {
         return !Modifier.isAbstract(this.wrapped.getModifiers()) && !typeClass.isInterface();
     }
 
+    /**
+     * @return true a wrapped field is of array type, false otherwise
+     */
     public boolean isArray() {
         return isArray;
     }
 
+    /**
+     * @return class type representing item type of this array field, null if this field is not of array type
+     */
     public Class<?> getArrayContentType() {
         return this.arrayContentType;
     }
 
+    /**
+     * @return number of field's generic arguments, 0 (zero) if it has none
+     */
     public int getTypeArgumentCount() {
         return hasTypeArguments ? typeArguments.length : 0;
     }
 
+    /**
+     * @param index index of generic argument to return
+     * @return class type of wrapped field's index'th argument
+     * @throws IndexOutOfBoundsException if index < 0 or index + 1 > number of generic arguments
+     */
     public Class<?> getTypeArgument(int index) {
         if (index < 0 || typeArguments == null || index > typeArguments.length) {
             throw new IndexOutOfBoundsException(String.format(
@@ -255,10 +293,34 @@ public class FieldType {
         return typeArguments[index];
     }
 
+    /**
+     * @param annotationClass annotation class
+     * @return annotation of wrapped field
+     * @see {@link Class#getAnnotation(Class)}
+     */
     public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
         return this.wrapped.getAnnotation(annotationClass);
     }
 
+    /**
+     * @return declared annotations of wrapped field
+     * @see {@link Class#getDeclaredAnnotations()}
+     */
+    public Annotation[] getDeclaredAnnotations() {
+        return this.wrapped.getDeclaredAnnotations();
+    }
+
+    /**
+     * Sets the wrapped field on the specified instance argument to the specified new value. The new
+     * value is automatically unwrapped if the underlying field has a primitive type. The wrapped field
+     * is also set to be "accessible" via {@link Field#setAccessible(boolean)}.
+     *
+     * @param instance the object whose field should be modified
+     * @param value  the new value for the field of instance being modified
+     * @throws IllegalArgumentException see {@link Field#set(Object, Object)}
+     * @throws IllegalAccessException see {@link Field#set(Object, Object)}
+     * @see {@link Field#setAccessible(boolean)}
+     */
     public void set(Object instance, Object value) throws IllegalArgumentException, IllegalAccessException {
         this.wrapped.setAccessible(true);
         this.wrapped.set(instance, value);

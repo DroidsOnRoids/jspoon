@@ -2,15 +2,19 @@ package pl.droidsonroids.jspoon;
 
 import static pl.droidsonroids.jspoon.annotation.Selector.NO_VALUE;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Locale;
 
 import pl.droidsonroids.jspoon.annotation.Format;
-import pl.droidsonroids.jspoon.annotation.Nullable;
 import pl.droidsonroids.jspoon.annotation.Selector;
+import pl.droidsonroids.jspoon.annotation.SkipOn;
 
+/**
+ * Class holding all the required meta-data about a specific {@link Selector} annotated field.
+ */
 public class SelectorSpec {
 
     private final String cssQuery;
@@ -20,9 +24,9 @@ public class SelectorSpec {
     private String regex;
     private String format;
     private Locale locale;
-    private boolean nullable;
     private Class<ElementConverter<?>> converter;
     private Selector selector;
+    private Annotation[] annotations;
 
     @SuppressWarnings("deprecation")
     SelectorSpec(Selector selector, FieldType field) {
@@ -31,7 +35,7 @@ public class SelectorSpec {
         this.attribute = selector.attr();
         this.defaultValue = NO_VALUE.equals(selector.defValue()) ? null : selector.defValue();
         this.index = selector.index();
-        this.nullable = (field.getAnnotation(Nullable.class) != null);
+        this.annotations = field.getDeclaredAnnotations();
 
         @SuppressWarnings("unchecked")
         Class<ElementConverter<?>> elConverter = (Class<ElementConverter<?>>) selector.converter();
@@ -70,38 +74,91 @@ public class SelectorSpec {
         return this.selector;
     }
 
+    boolean shouldSkipOn(Throwable conversionException) {
+        SkipOn skipAnnotation = getDeclaredAnnotation(SkipOn.class);
+        if (conversionException != null && skipAnnotation != null
+                && skipAnnotation.value() != null) {
+
+            for (Class<? extends Throwable> trowableToSkip : skipAnnotation.value()) {
+                if (trowableToSkip.isAssignableFrom(conversionException.getClass())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns {@link Selector} field's declared annotation of a particular class.
+     * @param annotationClass the annotation class
+     * @return declared annotation or null
+     */
+    public <T extends Annotation> T getDeclaredAnnotation(Class<T> annotationClass) {
+        if (annotationClass == null || annotations == null || annotations.length == 0) {
+            return null;
+        }
+        for (Annotation ann : annotations) {
+            if (ann.annotationType() == annotationClass) {
+                @SuppressWarnings("unchecked")
+                T found = (T) ann;
+                return found;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @return specified CSS query value
+     */
     public String getCssQuery() {
         return cssQuery;
     }
 
+    /**
+     * @return specified attribute to be selected
+     */
     public String getAttribute() {
         return attribute;
     }
 
+    /**
+     * @return specified default value or null
+     */
     public String getDefaultValue() {
         return defaultValue;
     }
 
+    /**
+     * @return element's index in the selected collection
+     */
     public int getIndex() {
         return index;
     }
 
+    /**
+     * @return returns specified regular expression or null
+     */
     public String getRegex() {
         return regex;
     }
 
+    /**
+     * @return returns specified expected format to parse or null
+     */
     public String getFormat() {
         return format;
     }
 
+    /**
+     * @return returns specified locale to be used by a {@link Formatter} or null
+     */
     public Locale getLocale() {
         return locale;
     }
 
-    public boolean isNullable() {
-        return nullable;
-    }
-
+    /**
+     * @return a specified converter to use or null
+     */
     public Class<ElementConverter<?>> getConverter() {
         return this.converter;
     }

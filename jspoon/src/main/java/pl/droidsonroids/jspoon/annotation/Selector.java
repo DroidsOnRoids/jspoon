@@ -46,10 +46,12 @@ public @interface Selector {
 
     /** @return Regex for numbers and String, date format for Date.
      * @deprecated in favor of {@link Format} annotation and {@link #regex()} */
+    @Deprecated
     String format() default NO_VALUE;
 
     /** @return Locale string, used for Date and Float
      * @deprecated in favor of {@link Format} annotation */
+    @Deprecated
     String locale() default NO_VALUE;
 
     /** @return Default String value if selected HTML element is empty */
