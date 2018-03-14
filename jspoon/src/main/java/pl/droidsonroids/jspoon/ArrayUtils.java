@@ -18,29 +18,28 @@ class ArrayUtils {
         if (!primitiveType.isPrimitive()) {
             throw new IllegalArgumentException(primitiveType + " is not a primitive type");
         }
-        Class<?> pt = primitiveType;
-        if(Boolean.TYPE.equals(pt)) {
+        if(Boolean.TYPE.equals(primitiveType)) {
             return toPrimitive((Boolean[]) array);
         }
-        if(Integer.TYPE.equals(pt)) {
+        if(Integer.TYPE.equals(primitiveType)) {
             return toPrimitive((Integer[]) array);
         }
-        if(Long.TYPE.equals(pt)) {
+        if(Long.TYPE.equals(primitiveType)) {
             return toPrimitive((Long[]) array);
         }
-        if(Short.TYPE.equals(pt)) {
+        if(Short.TYPE.equals(primitiveType)) {
             return toPrimitive((Short[]) array);
         }
-        if(Byte.TYPE.equals(pt)) {
+        if(Byte.TYPE.equals(primitiveType)) {
             return toPrimitive((Byte[]) array);
         }
-        if(Character.TYPE.equals(pt)) {
+        if(Character.TYPE.equals(primitiveType)) {
             return toPrimitive((Character[]) array);
         }
-        if(Double.TYPE.equals(pt)) {
+        if(Double.TYPE.equals(primitiveType)) {
             return toPrimitive((Double[]) array);
         }
-        if(Float.TYPE.equals(pt)) {
+        if(Float.TYPE.equals(primitiveType)) {
             return toPrimitive((Float[]) array);
         }
         return array;
@@ -53,7 +52,7 @@ class ArrayUtils {
         final char[] result = new char[array.length];
         for (int i = 0; i < array.length; i++) {
             if (array[i] == null) {
-                result[i] = (new char[1])[0];
+                result[i] = '\u0000';
                 continue;
             }
             result[i] = array[i].charValue();
@@ -68,7 +67,7 @@ class ArrayUtils {
         final byte[] result = new byte[array.length];
         for (int i = 0; i < array.length; i++) {
             if (array[i] == null) {
-                result[i] = (new byte[1])[0];
+                result[i] = 0;
                 continue;
             }
             result[i] = array[i].byteValue();
@@ -83,7 +82,7 @@ class ArrayUtils {
         final boolean[] result = new boolean[array.length];
         for (int i = 0; i < array.length; i++) {
             if (array[i] == null) {
-                result[i] = (new boolean[1])[0];
+                result[i] = false;
                 continue;
             }
             result[i] = array[i].booleanValue();
@@ -98,7 +97,7 @@ class ArrayUtils {
         final float[] result = new float[array.length];
         for (int i = 0; i < array.length; i++) {
             if (array[i] == null) {
-                result[i] = (new float[1])[0];
+                result[i] = 0.0f;
                 continue;
             }
             result[i] = array[i].floatValue();
@@ -113,7 +112,7 @@ class ArrayUtils {
         final double[] result = new double[array.length];
         for (int i = 0; i < array.length; i++) {
             if (array[i] == null) {
-                result[i] = (new double[1])[0];
+                result[i] = 0.0d;
                 continue;
             }
             result[i] = array[i].doubleValue();
@@ -128,7 +127,7 @@ class ArrayUtils {
         final short[] result = new short[array.length];
         for (int i = 0; i < array.length; i++) {
             if (array[i] == null) {
-                result[i] = (new short[1])[0];
+                result[i] = 0;
                 continue;
             }
             result[i] = array[i].shortValue();
@@ -143,7 +142,7 @@ class ArrayUtils {
         final long[] result = new long[array.length];
         for (int i = 0; i < array.length; i++) {
             if (array[i] == null) {
-                result[i] = (new long[1])[0];
+                result[i] = 0L;
                 continue;
             }
             result[i] = array[i].longValue();
@@ -158,7 +157,7 @@ class ArrayUtils {
         final int[] result = new int[array.length];
         for (int i = 0; i < array.length; i++) {
             if (array[i] == null) {
-                result[i] = (new int[1])[0];
+                result[i] = 0;
                 continue;
             }
             result[i] = array[i].intValue();
