@@ -60,11 +60,17 @@ It can also be used with a class, then you don't need to annotate every field in
 By default, the HTML's `textContent` value is used on Strings, Dates and numbers. It is possible to use an attribute by setting an `attr` parameter in the `@Selector` annotation. You can also use `"html"` (or `"innerHtml"`) and `"outerHtml"` as `attr`'s value.
 
 ### Formatting and regex
-Date format or regex can be set up by passing `format` parameter to `@Selector` annotation. Example:
+Regex can be set up by passing `regex` parameter to `@Selector` annotation. Example:
 ```java
 class Page {
-    @Selector(value = "#date", format = "HH:mm:ss dd.MM.yyyy") Date date;
-    @Selector(value = "#numbers", format = "([a-z]+),") String matchedNumber;
+    @Selector(value = "#numbers", regex = "([a-z]+),") String matchedNumber;
+}
+```
+Date format can be set up by passing `value` parameter to `@Format` annotation. Example:
+```java
+class Page {
+    @Format(value = "HH:mm:ss dd.MM.yyyy")
+    @Selector(value = "#date") Date date;
 }
 ```
 ```java
@@ -75,10 +81,10 @@ HtmlAdapter<Page> htmlAdapter = jspoon.adapter(Page.class);
 Page page = htmlAdapter.fromHtml(htmlContent);//date = Jul 14, 2017 13:30:12; matchedNumber = "three";
 ```
 
-### Other parameters
-Java's `Locale` is used for parsing Floats, Doubles and Dates. You can override it by setting `locale` parameter:
+Java's `Locale` is used for parsing Floats, Doubles and Dates. You can override it by setting `languageTag` @Format parameter:
 ```java
-@Selector(value = "div > p > span", locale = "pl") Double pi; //3,14 will be parsed 
+@Format(languageTag = "pl")
+@Selector(value = "div > p > span") Double pi; //3,14 will be parsed 
 ```
 If jspoon doesn't find a HTML element it wont't set field's value unless you set the `defValue` parameter:
 ```java
