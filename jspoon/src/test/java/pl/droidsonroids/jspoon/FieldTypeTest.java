@@ -12,14 +12,20 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import pl.droidsonroids.jspoon.annotation.Selector;
+import pl.droidsonroids.jspoon.rule.CustomLocaleRule;
 
 public class FieldTypeTest {
+
+    @Rule
+    public CustomLocaleRule customLocaleRule = new CustomLocaleRule(Locale.US);
 
     private final static String HTML_CONTENT = "<div>"
             + "<span class='positive number'>123</span>"
