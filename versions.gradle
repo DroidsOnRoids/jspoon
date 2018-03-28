@@ -6,7 +6,7 @@ ext {
                 gradle       : '3.0.1',
                 support      : '27.0.2',
                 constraint   : '1.0.2',
-                jsoup        : '1.11.2',
+                jsoup        : '1.10.3',
                 junit        : '4.12',
                 retrofit     : '2.3.0',
                 mockwebserver: '3.9.1',
