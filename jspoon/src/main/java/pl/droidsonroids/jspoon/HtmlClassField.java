@@ -1,13 +1,9 @@
 package pl.droidsonroids.jspoon;
 
-import java.lang.reflect.Field;
-
 import org.jsoup.nodes.Element;
 
-import pl.droidsonroids.jspoon.annotation.Selector;
-
 class HtmlClassField<T> extends HtmlField<T> {
-    HtmlClassField(Field field, Selector selector) {
+    HtmlClassField(FieldType field, SelectorSpec selector) {
         super(field, selector);
     }
 

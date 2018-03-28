@@ -44,10 +44,14 @@ public @interface Selector {
     /** @return Attribute or property of selected field. "text" is default. Also "html"/"innerHtml" or "outerHtml" is supported. */
     String attr() default "text";
 
-    /** @return Regex for numbers and String, date format for Date. */
+    /** @return Regex for numbers and String, date format for Date.
+     * @deprecated in favor of {@link Format} annotation and {@link #regex()} */
+    @Deprecated
     String format() default NO_VALUE;
 
-    /** @return Locale string, used for Date and Float */
+    /** @return Locale string, used for Date and Float
+     * @deprecated in favor of {@link Format} annotation */
+    @Deprecated
     String locale() default NO_VALUE;
 
     /** @return Default String value if selected HTML element is empty */
@@ -55,6 +59,9 @@ public @interface Selector {
 
     /** @return Index of found HTML element */
     int index() default 0;
+
+    /** @return regular expression to be applied on the parsed Element String */
+    String regex() default "";
 
     /** @return The converter to be used for the matched {@link Element element} */
     @SuppressWarnings("rawtypes")

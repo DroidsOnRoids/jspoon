@@ -1,16 +1,19 @@
 package pl.droidsonroids.jspoon;
 
+import static org.junit.Assert.assertEquals;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import pl.droidsonroids.jspoon.annotation.Format;
 import pl.droidsonroids.jspoon.annotation.Selector;
 import pl.droidsonroids.jspoon.rule.CustomLocaleRule;
-
-import static org.junit.Assert.assertEquals;
 
 public class DateFormatTest {
     private final static String HTML_CONTENT = "<div>"
@@ -18,6 +21,7 @@ public class DateFormatTest {
             + "<span id='pl-date'>2017-07-14</span>"
             + "<span id='year-date'>2017</span>"
             + "<span id='full-date'>13:30:12 14.07.2017</span>"
+            + "<span id='regex-date'>date 20170714 can be regexp'd</span>"
             + "</div>";
     private final static Locale CUSTOM_DEFAULT_LOCALE = Locale.US;
     private Jspoon jspoon;
@@ -32,6 +36,14 @@ public class DateFormatTest {
 
     private static class DefaultDateModel {
         @Selector("#default-date") Date date;
+
+        @Format(languageTag = "pl")
+        @Selector("#pl-date") Date datePl;
+    }
+
+    private static class RegexDateModel {
+        @Format("yyyyMMdd")
+        @Selector(value = "#regex-date", regex = "(\\d+)") Date date;
     }
 
     private static class PlDateModel {
@@ -44,6 +56,9 @@ public class DateFormatTest {
 
     private static class FullDateModel {
         @Selector(value = "#full-date", format = "HH:mm:ss dd.MM.yyyy") Date date;
+
+        @Format(value = "HH:mm:ss dd.MM.yyyy")
+        @Selector(value = "#full-date") Date date2;
     }
 
     @Test
@@ -51,6 +66,14 @@ public class DateFormatTest {
         DefaultDateModel defaultDateModel = createObjectFromHtml(DefaultDateModel.class);
         DateFormat defaultDateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, CUSTOM_DEFAULT_LOCALE);
         assertEquals(defaultDateModel.date, defaultDateFormat.parse("Jul 14, 2017"));
+        assertEquals(defaultDateModel.datePl, defaultDateFormat.parse("Jul 14, 2017"));
+    }
+
+    @Test
+    public void regexDate() throws Exception {
+        RegexDateModel regexDateModel = createObjectFromHtml(RegexDateModel.class);
+        DateFormat defaultDateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, CUSTOM_DEFAULT_LOCALE);
+        assertEquals(regexDateModel.date, defaultDateFormat.parse("Jul 14, 2017"));
     }
 
     @Test
@@ -73,6 +96,7 @@ public class DateFormatTest {
         FullDateModel fullDateModel = createObjectFromHtml(FullDateModel.class);
         DateFormat fullDateFormat = new SimpleDateFormat("HH:mm:ss dd.MM.yyyy", CUSTOM_DEFAULT_LOCALE);
         assertEquals(fullDateModel.date, fullDateFormat.parse("13:30:12 14.07.2017"));
+        assertEquals(fullDateModel.date2, fullDateFormat.parse("13:30:12 14.07.2017"));
     }
 
     private <T> T createObjectFromHtml(Class<T> className) {
