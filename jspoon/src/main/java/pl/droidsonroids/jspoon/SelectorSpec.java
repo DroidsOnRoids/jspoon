@@ -90,6 +90,7 @@ public class SelectorSpec {
 
     /**
      * Returns {@link Selector} field's declared annotation of a particular class.
+     * @param <T> annotation class type
      * @param annotationClass the annotation class
      * @return declared annotation or null
      */
@@ -150,7 +151,7 @@ public class SelectorSpec {
     }
 
     /**
-     * @return returns specified locale to be used by a {@link Formatter} or null
+     * @return returns specified locale to be used by a {@link Format} or null
      */
     public Locale getLocale() {
         return locale;
