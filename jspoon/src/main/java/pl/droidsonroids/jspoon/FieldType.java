@@ -227,6 +227,7 @@ public class FieldType {
     }
 
     /**
+     * @param superClass a class to check
      * @return true if a given class is of wrapped field's type or its subclass, false otherwise
      */
     public boolean isAssignableTo(Class<?> superClass) {
@@ -282,7 +283,7 @@ public class FieldType {
     /**
      * @param index index of generic argument to return
      * @return class type of wrapped field's index'th argument
-     * @throws IndexOutOfBoundsException if index < 0 or index + 1 > number of generic arguments
+     * @throws IndexOutOfBoundsException if index less than 0 or index + 1 greater than number of generic arguments
      */
     public Class<?> getTypeArgument(int index) {
         if (index < 0 || typeArguments == null || index > typeArguments.length) {
@@ -294,9 +295,9 @@ public class FieldType {
     }
 
     /**
+     * @param <T> annotation class type
      * @param annotationClass annotation class
      * @return annotation of wrapped field
-     * @see {@link Class#getAnnotation(Class)}
      */
     public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
         return this.wrapped.getAnnotation(annotationClass);
@@ -304,7 +305,6 @@ public class FieldType {
 
     /**
      * @return declared annotations of wrapped field
-     * @see {@link Class#getDeclaredAnnotations()}
      */
     public Annotation[] getDeclaredAnnotations() {
         return this.wrapped.getDeclaredAnnotations();
@@ -319,7 +319,6 @@ public class FieldType {
      * @param value  the new value for the field of instance being modified
      * @throws IllegalArgumentException see {@link Field#set(Object, Object)}
      * @throws IllegalAccessException see {@link Field#set(Object, Object)}
-     * @see {@link Field#setAccessible(boolean)}
      */
     public void set(Object instance, Object value) throws IllegalArgumentException, IllegalAccessException {
         this.wrapped.setAccessible(true);
