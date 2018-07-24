@@ -1,17 +1,17 @@
 plugins {
-    id 'java'
+    id 'java-library'
     id 'maven-publish'
     id 'signing'
     id 'com.bmuschko.nexus' version '2.3.1'
 }
 
 dependencies {
-    compile "com.squareup.retrofit2:retrofit:$versions.retrofit"
-    compile "pl.droidsonroids:jspoon:${POM_VERSION}"
+    api "com.squareup.retrofit2:retrofit:$versions.retrofit"
+    api "pl.droidsonroids:jspoon:${POM_VERSION}"
 
-    testCompile "junit:junit:$versions.junit"
-    testCompile "com.squareup.okhttp3:mockwebserver:$versions.mockwebserver"
-    testCompile "org.mockito:mockito-core:$versions.mockito"
+    testImplementation "junit:junit:$versions.junit"
+    testImplementation "com.squareup.okhttp3:mockwebserver:$versions.mockwebserver"
+    testImplementation "org.mockito:mockito-core:$versions.mockito"
 }
 
 group = POM_RETROFIT_GROUP

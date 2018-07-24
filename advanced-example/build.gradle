@@ -15,10 +15,10 @@ sourceSets {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin"
-
     implementation project(":jspoon")
     implementation project(":retrofit-converter-jspoon")
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit"
 
     testImplementation "junit:junit:$versions.junit"
