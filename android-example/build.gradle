@@ -26,8 +26,8 @@ repositories {
 }
 
 dependencies {
-    compile "com.android.support:appcompat-v7:$versions.support"
-    compile "com.android.support.constraint:constraint-layout:$versions.constraint"
+    implementation project(":jspoon")
 
-    compile project(":jspoon")
+    implementation "com.android.support:appcompat-v7:$versions.support"
+    implementation "com.android.support.constraint:constraint-layout:$versions.constraint"
 }
