@@ -68,7 +68,7 @@ public class ConverterTest {
     public void testCustomConverter() {
         HtmlAdapter<WeatherReport> htmlAdapter = jspoon.adapter(WeatherReport.class);
         WeatherReport weatherReport = htmlAdapter.fromHtml(
-            "<p id=\"today-weather\">Today is Saturday. Weather is sunny</p>"
+            "<p>Test</p><p id=\"today-weather\">Today is Saturday. Weather is sunny</p>"
         );
 
         assertEquals(weatherReport.dayOfWeek, DayOfWeek.SATURDAY);
