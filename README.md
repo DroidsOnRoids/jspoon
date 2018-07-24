@@ -112,6 +112,9 @@ public class Model {
 ### Retrofit
 Retrofit converter is available [here][retrofit-converter].
 
+### Changelog
+See [GitHub releases][changelog]
+
 ### Other libraries/inspirations
 * [jsoup][jsoup] - all HTML parsing in jspoon is made by this library
 * [webGrude][webGrude] - when I had an idea I found this library. It was the biggest inspiration and I used some ideas from it
@@ -124,3 +127,4 @@ Retrofit converter is available [here][retrofit-converter].
    [Moshi]: <https://github.com/square/moshi>
    [jsoup-annotations]: <https://github.com/fcannizzaro/jsoup-annotations>
    [retrofit-converter]: <https://github.com/DroidsOnRoids/jspoon/tree/master/retrofit-converter-jspoon>
+   [changelog]: <https://github.com/DroidsOnRoids/jspoon/releases>
