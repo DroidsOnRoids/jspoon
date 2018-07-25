@@ -91,6 +91,24 @@ If jspoon doesn't find a HTML element it wont't set field's value unless you set
 @Selector(value = "div > p > span", defValue = "NO_TEXT") String text;
 ```
 
+### Custom converterts
+When format or regex is not enough, custom converter can be used to implement parsing from jsoup's `Element`. This can be done by extending `ElementConverter` class:
+```java
+public class JoinChildrenClassConverter implements ElementConverter<String> {
+    @Override
+    public String convert(Element node, Selector selector) {
+        return node.children().stream().map(Element::text).collect(Collectors.joining(", "));
+    }
+}
+```
+And it can be used the following way:
+```java
+public class Model {
+    @Selector(value = "#id", converter = JoinChildrenClassConverter::class)
+    String childrenText;
+}
+```
+
 ### Retrofit
 Retrofit converter is available [here][retrofit-converter].
 
