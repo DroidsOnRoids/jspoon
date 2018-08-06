@@ -22,7 +22,7 @@ import pl.droidsonroids.jspoon.exception.FloatParseException;
 abstract class HtmlField<T> {
 
     protected final FieldType field;
-    protected final SelectorSpec spec;
+    final SelectorSpec spec;
 
     HtmlField(FieldType field, SelectorSpec spec) {
         this.field = field;
@@ -31,11 +31,11 @@ abstract class HtmlField<T> {
 
     protected abstract void setValue(Jspoon jspoon, Element node, T newInstance);
 
-    protected Elements selectChildren(Element node) {
+    Elements selectChildren(Element node) {
         return node.select(spec.getCssQuery());
     }
 
-    protected Element selectChild(Element parent) {
+    Element selectChild(Element parent) {
         Elements elements = selectChildren(parent);
         int size = elements.size();
         if (size == 0 || size <= spec.getIndex()) {
@@ -56,7 +56,7 @@ abstract class HtmlField<T> {
         }
     }
 
-    protected <U> U instanceForNode(Element node, Class<U> fieldType) {
+    <U> U instanceForNode(Element node, Class<U> fieldType) {
         // if clazz.isPrimitive convert it to it's Object counterpart
         fieldType = Utils.wrapToObject(fieldType);
 
@@ -185,7 +185,7 @@ abstract class HtmlField<T> {
 
     private Float getFloat(String value) {
         try {
-            return Float.valueOf(NumberFormat.getInstance(spec.getLocale()).parse(value).floatValue());
+            return NumberFormat.getInstance(spec.getLocale()).parse(value).floatValue();
         }
         catch (ParseException e) {
             throw new FloatParseException(value, spec.getLocale());

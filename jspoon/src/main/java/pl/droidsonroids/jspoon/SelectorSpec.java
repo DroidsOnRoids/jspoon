@@ -79,8 +79,8 @@ public class SelectorSpec {
         if (conversionException != null && skipAnnotation != null
                 && skipAnnotation.value() != null) {
 
-            for (Class<? extends Throwable> trowableToSkip : skipAnnotation.value()) {
-                if (trowableToSkip.isAssignableFrom(conversionException.getClass())) {
+            for (Class<? extends Throwable> throwableToSkip : skipAnnotation.value()) {
+                if (throwableToSkip.isAssignableFrom(conversionException.getClass())) {
                     return true;
                 }
             }

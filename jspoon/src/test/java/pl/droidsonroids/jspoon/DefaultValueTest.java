@@ -21,7 +21,7 @@ public class DefaultValueTest {
         @Selector(value = "p", defValue = "-100") int number;
 
         @Selector(value = "span", defValue = "hello") String text2 = "world";
-        @Selector(value = "span") String text3 = "helloworld";
+        @Selector(value = "span") String text3 = "hello world";
         @Selector(value = "span") String text4;
     }
 
@@ -31,7 +31,7 @@ public class DefaultValueTest {
         Model model = htmlAdapter.fromHtml("<div></div>");
         assertEquals("DEFAULT_VALUE", model.text); // since defValue explicitly defined
         assertEquals("hello", model.text2); // defValue takes precedent as its whatever would be parsed from Element
-        assertEquals("helloworld", model.text3); // no defValue, let's leave whatever is set
+        assertEquals("hello world", model.text3); // no defValue, let's leave whatever is set
         assertNull(model.text4); // should not be set to anything silently if developer did not set a defValue
         assertEquals(-100, model.number);
     }

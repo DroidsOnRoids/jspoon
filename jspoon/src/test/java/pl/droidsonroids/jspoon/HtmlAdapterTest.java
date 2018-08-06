@@ -13,14 +13,14 @@ import static org.junit.Assert.assertEquals;
 public class HtmlAdapterTest {
 
     private static final String HTML_CONTENT = "<div>"
-            + "<span id='firstname'>John</span>"
-            + "<span id='lastname'>Doe</span>"
+            + "<span id='firstName'>John</span>"
+            + "<span id='lastName'>Doe</span>"
             + "</div>";
 
     private static class Profile {
 
-        @Selector(value = "#firstname") String firstname;
-        @Selector(value = "#lastname") String lastname;
+        @Selector(value = "#firstName") String firstName;
+        @Selector(value = "#lastName") String lastName;
     }
 
     private Jspoon jspoon;
@@ -38,8 +38,8 @@ public class HtmlAdapterTest {
                      = new ByteArrayInputStream(HTML_CONTENT.getBytes())) {
 
             Profile profile = adapter.fromInputStream(inputStream, baseUrl);
-            assertEquals("John", profile.firstname);
-            assertEquals("Doe", profile.lastname);
+            assertEquals("John", profile.firstName);
+            assertEquals("Doe", profile.lastName);
         }
     }
 }

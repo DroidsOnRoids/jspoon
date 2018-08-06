@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import pl.droidsonroids.jspoon.annotation.Selector;
 
-public class FieldInheritenceTest {
+public class FieldInheritanceTest {
 
     private final static String HTML_CONTENT = "<div>"
             + "<span class='string'>Test1</span>"
@@ -61,7 +61,7 @@ public class FieldInheritenceTest {
 
     @SuppressWarnings("static-access")
     @Test
-    public void testDowncastingInstanceFields() {
+    public void testDownCastingInstanceFields() {
         HtmlAdapter<ParentModel> htmlAdapter = jspoon.adapter(ParentModel.class);
         ChildModel subclass = new ChildModel();
         ChildModel model = (ChildModel) htmlAdapter.fromHtml(HTML_CONTENT, subclass);

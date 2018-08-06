@@ -177,7 +177,7 @@ public class HtmlAdapter<T> {
         return loadFromNode(node, null);
     }
 
-    T loadFromNode(Element node, T instance) {
+    private T loadFromNode(Element node, T instance) {
         if (instance == null) {
             instance = Utils.constructInstance(clazz);
         }
