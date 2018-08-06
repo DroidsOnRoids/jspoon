@@ -1,12 +1,13 @@
 package pl.droidsonroids.jspoon;
 
-import static org.junit.Assert.assertEquals;
-
+import org.jetbrains.annotations.NotNull;
 import org.jsoup.nodes.Element;
 import org.junit.Before;
 import org.junit.Test;
 
 import pl.droidsonroids.jspoon.annotation.Selector;
+
+import static org.junit.Assert.assertEquals;
 
 public class ConverterTest {
 
@@ -41,7 +42,7 @@ public class ConverterTest {
     private static class DayOfWeekConverter implements ElementConverter<DayOfWeek> {
 
         @Override
-        public DayOfWeek convert(Element node, Selector selector) {
+        public DayOfWeek convert(@NotNull Element node, @NotNull Selector selector) {
             String text = node.text();
             text = text.substring("Today is ".length(), text.indexOf("."));
             for (DayOfWeek dayOfWeek : DayOfWeek.values())
@@ -54,7 +55,7 @@ public class ConverterTest {
     private static class WeatherConverter implements ElementConverter<Weather> {
 
         @Override
-        public Weather convert(Element node, Selector selector) {
+        public Weather convert(@NotNull Element node, @NotNull Selector selector) {
             String text = node.text();
             int offset = text.indexOf("Weather");
             offset += "Weather is ".length();

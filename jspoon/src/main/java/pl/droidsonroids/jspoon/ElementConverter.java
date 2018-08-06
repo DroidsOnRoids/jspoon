@@ -1,5 +1,6 @@
 package pl.droidsonroids.jspoon;
 
+import org.jetbrains.annotations.NotNull;
 import org.jsoup.nodes.Element;
 
 import pl.droidsonroids.jspoon.annotation.Selector;
@@ -19,5 +20,5 @@ public interface ElementConverter<T> {
      * @param selector The annotation where this converter is registered
      * @return the value to be assigned to the field
      */
-    T convert(Element node, Selector selector);
+    T convert(@NotNull Element node, @NotNull Selector selector);
 }

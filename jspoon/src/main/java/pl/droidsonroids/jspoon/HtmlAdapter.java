@@ -1,5 +1,10 @@
 package pl.droidsonroids.jspoon;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -8,9 +13,6 @@ import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
 
 import pl.droidsonroids.jspoon.annotation.Selector;
 import pl.droidsonroids.jspoon.exception.EmptySelectorException;
@@ -87,9 +89,8 @@ public class HtmlAdapter<T> {
      * @param htmlContent String with HTML content
      * @return Created object
      */
-    public T fromHtml(String htmlContent) {
-        Element pageRoot = Jsoup.parse(htmlContent);
-        return loadFromNode(pageRoot, null);
+    public T fromHtml(@NotNull String htmlContent) {
+        return fromHtml(htmlContent, null);
     }
 
     /**
@@ -101,7 +102,7 @@ public class HtmlAdapter<T> {
      * @return Created object of type {@code T}
      * @throws IOException If I/O error occurs while reading the {@code InputStream}
      */
-    public T fromInputStream(InputStream inputStream) throws IOException {
+    public T fromInputStream(@NotNull InputStream inputStream) throws IOException {
         return fromInputStream(inputStream, null);
     }
 
@@ -115,7 +116,7 @@ public class HtmlAdapter<T> {
      * @return Created object of type {@code T}
      * @throws IOException If I/O error occurs while reading the {@code InputStream}
      */
-    public T fromInputStream(InputStream inputStream, URL baseUrl) throws IOException {
+    public T fromInputStream(@NotNull InputStream inputStream, @Nullable URL baseUrl) throws IOException {
         return fromInputStream(inputStream, null, baseUrl);
     }
 
@@ -131,11 +132,11 @@ public class HtmlAdapter<T> {
      * @return Created object of type {@code T}
      * @throws IOException If I/O error occurs while reading the {@code InputStream}
      */
-    public T fromInputStream(InputStream inputStream, Charset charset, URL baseUrl, T instance) throws IOException {
+    public T fromInputStream(@NotNull InputStream inputStream, @Nullable Charset charset, @Nullable URL baseUrl, @Nullable T instance) throws IOException {
         String urlToUse = baseUrl != null ? baseUrl.toString() : null;
         String charsetToUse = charset != null ? charset.name() : null;
         Element root = Jsoup.parse(inputStream, charsetToUse, urlToUse);
-        return loadFromNode(root, null);
+        return loadFromNode(root, instance);
     }
 
     /**
@@ -149,11 +150,8 @@ public class HtmlAdapter<T> {
      * @return Created object of type {@code T}
      * @throws IOException If I/O error occurs while reading the {@code InputStream}
      */
-    public T fromInputStream(InputStream inputStream, Charset charset, URL baseUrl) throws IOException {
-        String urlToUse = baseUrl != null ? baseUrl.toString() : null;
-        String charsetToUse = charset != null ? charset.name() : null;
-        Element root = Jsoup.parse(inputStream, charsetToUse, urlToUse);
-        return loadFromNode(root, null);
+    public T fromInputStream(@NotNull InputStream inputStream, @Nullable Charset charset, @Nullable URL baseUrl) throws IOException {
+        return fromInputStream(inputStream, charset, baseUrl, null);
     }
 
     private void addCachedHtmlField(FieldType field, Selector selector) {

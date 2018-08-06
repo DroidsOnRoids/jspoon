@@ -1,5 +1,7 @@
 package pl.droidsonroids.jspoon;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,7 +17,7 @@ public class Jspoon {
      *
      * @return a new Jspoon instance
      */
-    public static Jspoon create() {
+    public static @NotNull Jspoon create() {
         return new Jspoon();
     }
 
@@ -32,7 +34,7 @@ public class Jspoon {
      */
 
     @SuppressWarnings("unchecked")
-    public <T> HtmlAdapter<T> adapter(Class<T> clazz) {
+    public @NotNull <T> HtmlAdapter<T> adapter(Class<T> clazz) {
         if (!adapterCache.containsKey(clazz)) {
             adapterCache.put(clazz, new HtmlAdapter<>(this, clazz));
         }
