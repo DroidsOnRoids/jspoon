@@ -8,6 +8,7 @@ plugins {
 dependencies {
     api "org.jsoup:jsoup:$versions.jsoup"
     compileOnly "org.jetbrains:annotations:$versions.annotations"
+    testCompileOnly "org.jetbrains:annotations:$versions.annotations"
     testImplementation "junit:junit:$versions.junit"
 }
 

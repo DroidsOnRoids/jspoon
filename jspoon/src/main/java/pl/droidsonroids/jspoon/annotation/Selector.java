@@ -36,7 +36,7 @@ import pl.droidsonroids.jspoon.HtmlAdapter;
 @Target({ ElementType.TYPE, ElementType.FIELD })
 public @interface Selector {
 
-    static final String NO_VALUE = "NO_VALUE";
+    String NO_VALUE = "NO_VALUE";
 
     /** @return Css query */
     String value();

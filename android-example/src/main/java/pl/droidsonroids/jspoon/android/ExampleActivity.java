@@ -34,7 +34,7 @@ public class ExampleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_example);
-        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
+        LinearLayout linearLayout = findViewById(R.id.linearLayout);
 
         Jspoon jspoon = Jspoon.create();
         HtmlAdapter<Animals> htmlAdapter = jspoon.adapter(Animals.class);

@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,7 @@ import pl.droidsonroids.jspoon.exception.ObjectCreationException;
 class Utils {
 
     /** Map of class representing primitives and their object counterparts. */
-    private final static Map<Class<?>, Class<?>> PRIMITIVE_WRAPPERS = new HashMap<Class<?>, Class<?>>();
+    private final static Map<Class<?>, Class<?>> PRIMITIVE_WRAPPERS = new HashMap<>();
 
     static {
         PRIMITIVE_WRAPPERS.put(boolean.class, Boolean.class);
@@ -69,9 +70,7 @@ class Utils {
             return declaredFields;
         }
         declaredFields = getAllDeclaredFields(target.getSuperclass());
-        for (Field field : target.getDeclaredFields()) {
-            declaredFields.add(field);
-        }
+        declaredFields.addAll(Arrays.asList(target.getDeclaredFields()));
         return declaredFields;
     }
 

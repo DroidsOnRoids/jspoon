@@ -53,7 +53,7 @@ public class FieldTypeTest {
     }
 
     @Test
-    public void testGenericStringList() throws Exception {
+    public void testGenericStringList() {
         HtmlAdapter<StringListModel> htmlAdapter = Jspoon.create().adapter(StringListModel.class);
         StringListModel model = htmlAdapter.fromHtml(HTML_CONTENT);
         assertNotNull(model.item);
@@ -65,7 +65,7 @@ public class FieldTypeTest {
     }
 
     @Test
-    public void testGenericString() throws Exception {
+    public void testGenericString()  {
         HtmlAdapter<StringModel> htmlAdapter = Jspoon.create().adapter(StringModel.class);
         StringModel model = htmlAdapter.fromHtml(HTML_CONTENT);
         assertNotNull(model.item);
@@ -76,7 +76,7 @@ public class FieldTypeTest {
     }
 
     @Test
-    public void testGenericStringArray() throws Exception {
+    public void testGenericStringArray()  {
         HtmlAdapter<StringArrayModel> htmlAdapter = Jspoon.create().adapter(StringArrayModel.class);
         StringArrayModel model = htmlAdapter.fromHtml(HTML_CONTENT);
         assertNotNull(model.item);
@@ -87,7 +87,7 @@ public class FieldTypeTest {
     }
 
     @Test
-    public void testGenericPrimitivesArray() throws Exception {
+    public void testGenericPrimitivesArray()  {
         HtmlAdapter<PrimitiveArrayModel> htmlAdapter = Jspoon.create().adapter(PrimitiveArrayModel.class);
         PrimitiveArrayModel model = htmlAdapter.fromHtml(HTML_CONTENT);
         assertNotNull(model.item);
@@ -99,7 +99,7 @@ public class FieldTypeTest {
     }
 
     @Test
-    public void testLinkedList() throws Exception {
+    public void testLinkedList()  {
         HtmlAdapter<LinkedListModel> htmlAdapter = Jspoon.create().adapter(LinkedListModel.class);
         LinkedListModel model = htmlAdapter.fromHtml(HTML_CONTENT);
         assertNotNull(model.list);
@@ -113,7 +113,7 @@ public class FieldTypeTest {
     }
 
     @Test
-    public void testRawList() throws Exception {
+    public void testRawList()  {
         HtmlAdapter<RawModel> htmlAdapter = Jspoon.create().adapter(RawModel.class);
         RawModel model = htmlAdapter.fromHtml(HTML_CONTENT);
         assertNotNull(model.list);
@@ -126,7 +126,7 @@ public class FieldTypeTest {
     }
 
     @Test
-    public void testObjectList() throws Exception {
+    public void testObjectList()  {
         HtmlAdapter<WildcardModel> htmlAdapter = Jspoon.create().adapter(WildcardModel.class);
         WildcardModel model = htmlAdapter.fromHtml(HTML_CONTENT);
         assertNotNull(model.list);
@@ -139,7 +139,7 @@ public class FieldTypeTest {
     }
 
     @Test
-    public void testStringList() throws Exception {
+    public void testStringList()  {
         HtmlAdapter<BoundWildcardModel> htmlAdapter = Jspoon.create().adapter(BoundWildcardModel.class);
         BoundWildcardModel model = htmlAdapter.fromHtml(HTML_CONTENT);
         assertNotNull(model.list);
@@ -162,7 +162,7 @@ public class FieldTypeTest {
     }
 
     @Test
-    public void genericFieldsTest() throws Exception {
+    public void genericFieldsTest()  {
         @SuppressWarnings("rawtypes")
         HtmlAdapter<ModelGeneric> htmlAdapter = jspoon.adapter(ModelGeneric.class);
         ModelGeneric<?> model = htmlAdapter.fromHtml(HTML_CONTENT);
@@ -174,7 +174,7 @@ public class FieldTypeTest {
     }
 
     @Test
-    public void genericStringFieldsTest() throws Exception {
+    public void genericStringFieldsTest()  {
         HtmlAdapter<ModelString> htmlAdapter = jspoon.adapter(ModelString.class);
         ModelString model = htmlAdapter.fromHtml(HTML_CONTENT);
         assertListEquals(model.justList, "3366", "-4", "9.98");
@@ -185,7 +185,7 @@ public class FieldTypeTest {
     }
 
     @Test
-    public void genericBigDecimalFieldsTest() throws Exception {
+    public void genericBigDecimalFieldsTest()  {
         HtmlAdapter<ModelBigDecimal> htmlAdapter = jspoon.adapter(ModelBigDecimal.class);
         ModelBigDecimal model = htmlAdapter.fromHtml(HTML_CONTENT);
         assertListEquals(model.justList, "3366", "-4", "9.98");

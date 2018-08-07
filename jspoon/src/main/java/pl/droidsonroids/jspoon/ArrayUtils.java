@@ -45,7 +45,7 @@ class ArrayUtils {
         return array;
     }
 
-    static char[] toPrimitive(Character[] array) {
+    private static char[] toPrimitive(Character[] array) {
         if (array == null) {
             return null;
         }
@@ -55,12 +55,12 @@ class ArrayUtils {
                 result[i] = '\u0000';
                 continue;
             }
-            result[i] = array[i].charValue();
+            result[i] = array[i];
         }
         return result;
     }
 
-    static byte[] toPrimitive(Byte[] array) {
+    private static byte[] toPrimitive(Byte[] array) {
         if (array == null) {
             return null;
         }
@@ -70,12 +70,12 @@ class ArrayUtils {
                 result[i] = 0;
                 continue;
             }
-            result[i] = array[i].byteValue();
+            result[i] = array[i];
         }
         return result;
     }
 
-    static boolean[] toPrimitive(Boolean[] array) {
+    private static boolean[] toPrimitive(Boolean[] array) {
         if (array == null) {
             return null;
         }
@@ -85,12 +85,12 @@ class ArrayUtils {
                 result[i] = false;
                 continue;
             }
-            result[i] = array[i].booleanValue();
+            result[i] = array[i];
         }
         return result;
     }
 
-    static float[] toPrimitive(Float[] array) {
+    private static float[] toPrimitive(Float[] array) {
         if (array == null) {
             return null;
         }
@@ -100,12 +100,12 @@ class ArrayUtils {
                 result[i] = 0.0f;
                 continue;
             }
-            result[i] = array[i].floatValue();
+            result[i] = array[i];
         }
         return result;
     }
 
-    static double[] toPrimitive(Double[] array) {
+    private static double[] toPrimitive(Double[] array) {
         if (array == null) {
             return null;
         }
@@ -115,12 +115,12 @@ class ArrayUtils {
                 result[i] = 0.0d;
                 continue;
             }
-            result[i] = array[i].doubleValue();
+            result[i] = array[i];
         }
         return result;
     }
 
-    static short[] toPrimitive(Short[] array) {
+    private static short[] toPrimitive(Short[] array) {
         if (array == null) {
             return null;
         }
@@ -130,12 +130,12 @@ class ArrayUtils {
                 result[i] = 0;
                 continue;
             }
-            result[i] = array[i].shortValue();
+            result[i] = array[i];
         }
         return result;
     }
 
-    static long[] toPrimitive(Long[] array) {
+    private static long[] toPrimitive(Long[] array) {
         if (array == null) {
             return null;
         }
@@ -145,12 +145,12 @@ class ArrayUtils {
                 result[i] = 0L;
                 continue;
             }
-            result[i] = array[i].longValue();
+            result[i] = array[i];
         }
         return result;
     }
 
-    static int[] toPrimitive(Integer[] array) {
+    private static int[] toPrimitive(Integer[] array) {
         if (array == null) {
             return null;
         }
@@ -160,7 +160,7 @@ class ArrayUtils {
                 result[i] = 0;
                 continue;
             }
-            result[i] = array[i].intValue();
+            result[i] = array[i];
         }
         return result;
     }

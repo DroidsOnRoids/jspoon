@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.util.List;
 
 import org.junit.Test;
 

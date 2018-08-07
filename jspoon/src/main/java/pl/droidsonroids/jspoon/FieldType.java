@@ -21,22 +21,19 @@ public class FieldType {
     private final String name;
     private final int localHashCode;
     private Class<?> typeClass;
-    private Type genericType;
     private boolean isArray = false;
     private Class<?> arrayContentType = null;
     private boolean hasTypeArguments = false;
     private Class<?>[] typeArguments = null;
-    private Class<?> subType;
 
     FieldType(Class<?> fieldClass, Field field) {
         if (fieldClass == null || field == null) {
             throw new IllegalArgumentException("Field and its class cannot be null");
         }
-        this.subType = fieldClass;
         this.wrapped = field;
         this.name = field.getName();
         this.typeClass = field.getType();
-        this.genericType = field.getGenericType();
+        Type genericType = field.getGenericType();
         this.localHashCode = field.hashCode() + name.hashCode();
 
         if (genericType instanceof Class) {
@@ -44,25 +41,24 @@ public class FieldType {
             this.isArray = classType.isArray();
             this.arrayContentType = classType.getComponentType();
         } else if (genericType instanceof ParameterizedType) {
-            processParametrizedType((ParameterizedType) genericType, subType);
+            processParametrizedType((ParameterizedType) genericType, fieldClass);
         } else if (genericType instanceof GenericArrayType) {
             GenericArrayType typeVarArray = (GenericArrayType) genericType;
             this.isArray = true;
             Type component = typeVarArray.getGenericComponentType();
-            this.arrayContentType = resolveClass(component, subType);
+            this.arrayContentType = resolveClass(component, fieldClass);
             if (component instanceof ParameterizedType) {
-                processParametrizedType((ParameterizedType) component, subType);
+                processParametrizedType((ParameterizedType) component, fieldClass);
             }
         } else if (genericType instanceof TypeVariable<?>) {
             TypeVariable<?> variable = (TypeVariable<?>) genericType;
-            Type resolvedType = getTypeVariableMap(subType).get(variable);
+            Type resolvedType = getTypeVariableMap(fieldClass).get(variable);
             resolvedType = (resolvedType == null) ? resolveBound(variable) : resolvedType;
-            this.genericType = resolvedType;
-            this.typeClass = resolveClass(resolvedType, subType);
+            this.typeClass = resolveClass(resolvedType, fieldClass);
             this.isArray = typeClass.isArray();
             this.arrayContentType = typeClass.getComponentType();
             if (resolvedType instanceof ParameterizedType) {
-                processParametrizedType((ParameterizedType) resolvedType, subType);
+                processParametrizedType((ParameterizedType) resolvedType, fieldClass);
             }
         }
     }
@@ -117,7 +113,7 @@ public class FieldType {
     }
 
     private static Map<TypeVariable<?>, Type> getTypeVariableMap(final Class<?> targetType) {
-        Map<TypeVariable<?>, Type> map = new HashMap<TypeVariable<?>, Type>();
+        Map<TypeVariable<?>, Type> map = new HashMap<>();
         // Populate interfaces
         populateSuperTypeArgs(targetType.getGenericInterfaces(), map);
         // Populate super classes and interfaces
@@ -288,7 +284,7 @@ public class FieldType {
     public Class<?> getTypeArgument(int index) {
         if (index < 0 || typeArguments == null || index > typeArguments.length) {
             throw new IndexOutOfBoundsException(String.format(
-                    "There are %s type argumens, want to retrieve at %s",
+                    "There are %s type arguments, want to retrieve at %s",
                     (typeArguments == null ? "none" : typeArguments.length), index));
         }
         return typeArguments[index];
