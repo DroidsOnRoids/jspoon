@@ -15,7 +15,7 @@ Installation
 Insert the following dependency to `build.gradle` file of your project:
 ```gradle
 dependencies {
-    implementation 'pl.droidsonroids.retrofit2:converter-jspoon:1.3.1'
+    implementation 'pl.droidsonroids.retrofit2:converter-jspoon:1.3.2'
 }
 ```
 Example

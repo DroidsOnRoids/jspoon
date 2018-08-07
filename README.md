@@ -8,7 +8,7 @@ jspoon is a Java library that provides parsing HTML into Java objects basing on 
 Insert the following dependency into your project's `build.gradle` file:
 ```gradle
 dependencies {
-    implementation 'pl.droidsonroids:jspoon:1.3.1'
+    implementation 'pl.droidsonroids:jspoon:1.3.2'
 }
 ```
 ## Usage
