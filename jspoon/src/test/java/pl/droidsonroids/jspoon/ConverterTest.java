@@ -8,6 +8,7 @@ import org.junit.Test;
 import pl.droidsonroids.jspoon.annotation.Selector;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class ConverterTest {
 
@@ -25,6 +26,9 @@ public class ConverterTest {
 
         @Selector(value="#today-weather", converter=WeatherConverter.class)
         Weather weather;
+
+        @Selector(value="#tomorrow-weather", converter=WeatherConverter.class)
+        Weather tomorrowsWeather;
     }
 
     private enum DayOfWeek {
@@ -74,6 +78,7 @@ public class ConverterTest {
 
         assertEquals(weatherReport.dayOfWeek, DayOfWeek.SATURDAY);
         assertEquals(weatherReport.weather.condition, "sunny");
+        assertNull(weatherReport.tomorrowsWeather);
     }
 
 }

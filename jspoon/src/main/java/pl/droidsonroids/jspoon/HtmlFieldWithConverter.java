@@ -18,8 +18,10 @@ class HtmlFieldWithConverter<T> extends HtmlField<T> {
     @Override
     public void setValue(Jspoon jspoon, Element node, T newInstance) {
         Element selectedNode = selectChild(node);
-        Selector selectorAnnotation = spec.getSelectorAnnotation();
-        Object converted = converter.convert(selectedNode, selectorAnnotation);
-        setFieldOrThrow(field, newInstance, converted);
+        if (selectedNode != null) {
+            Selector selectorAnnotation = spec.getSelectorAnnotation();
+            Object converted = converter.convert(selectedNode, selectorAnnotation);
+            setFieldOrThrow(field, newInstance, converted);
+        }
     }
 }
