@@ -142,7 +142,10 @@ abstract class HtmlField<T> {
                 if (value == null || value.isEmpty()) {
                     value = spec.getDefaultValue();
                 }
+            } else {
+                value = spec.getDefaultValue();
             }
+
         }
         return value;
     }
